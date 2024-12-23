@@ -1,0 +1,20 @@
+.ball {
+  display: flex;
+  position: relative;
+  &__cnt {
+    display: flex;
+    position: absolute;
+    bottom: -3px;
+    right: 0px;
+    font-size: 10px;
+    color: black;
+    font-weight: 500;
+  }
+  &__image_wrapper {
+    display: flex;
+    & > img {
+      display: flex;
+      width: 20px;
+    }
+  }
+}

@@ -27,12 +27,12 @@ class Player implements IPlayer {
     this.capturedCards = [];
     this.resevedCards = [];
     this.ballCollection = new BallCollection({
-      pokeBall: 0,
-      greatBall: 0,
-      ultraBall: 0,
-      healBall: 0,
-      quickBall: 0,
-      masterBall: 0,
+      pokeball: 0,
+      greatball: 0,
+      ultraball: 0,
+      healball: 0,
+      quickball: 0,
+      masterball: 0,
     });
     this.usedByEvolutionCards = [];
   }
@@ -47,12 +47,12 @@ class Player implements IPlayer {
 
   getDiscountBalls = () => {
     const bc = new BallCollection({
-      masterBall: 0,
-      ultraBall: 0,
-      healBall: 0,
-      quickBall: 0,
-      greatBall: 0,
-      pokeBall: 0,
+      masterball: 0,
+      ultraball: 0,
+      healball: 0,
+      quickball: 0,
+      greatball: 0,
+      pokeball: 0,
     });
 
     this.capturedCards.forEach((card) => {

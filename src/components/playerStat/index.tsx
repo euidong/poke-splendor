@@ -14,12 +14,12 @@ const PlayerStat = () => {
           <li>
             <div>{player.character}</div>
             <div>
-              마스터볼: {player.ballCollection.balls.masterBall} | 하이퍼볼:{" "}
-              {player.ballCollection.balls.ultraBall} | 퀵볼:{" "}
-              {player.ballCollection.balls.quickBall} | 힐볼:{" "}
-              {player.ballCollection.balls.healBall} | 슈퍼볼:{" "}
-              {player.ballCollection.balls.greatBall} | 몬스터볼:{" "}
-              {player.ballCollection.balls.pokeBall}
+              masterball: {player.ballCollection.balls.masterball} | ultraball:{" "}
+              {player.ballCollection.balls.ultraball} | quickball:{" "}
+              {player.ballCollection.balls.quickball} | healball:{" "}
+              {player.ballCollection.balls.healball} | greatball:{" "}
+              {player.ballCollection.balls.greatball} | pokeball:{" "}
+              {player.ballCollection.balls.pokeball}
             </div>
             <div># 진화한 포켓몬: {player.getEvolutionCnt()}</div>
             <ul>

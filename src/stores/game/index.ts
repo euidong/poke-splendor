@@ -42,12 +42,12 @@ class Game {
   initBoard(numPlayers: number) {
     const ballNumbers = [4, 5, 7];
     this.boardBallCollection = new BallCollection({
-      masterBall: 5,
-      ultraBall: ballNumbers[numPlayers - 2],
-      quickBall: ballNumbers[numPlayers - 2],
-      healBall: ballNumbers[numPlayers - 2],
-      greatBall: ballNumbers[numPlayers - 2],
-      pokeBall: ballNumbers[numPlayers - 2],
+      masterball: 5,
+      ultraball: ballNumbers[numPlayers - 2],
+      quickball: ballNumbers[numPlayers - 2],
+      healball: ballNumbers[numPlayers - 2],
+      greatball: ballNumbers[numPlayers - 2],
+      pokeball: ballNumbers[numPlayers - 2],
     });
 
     this.boardCards = Object.values(cards).map((card) => ({
@@ -112,7 +112,7 @@ class Game {
       return false;
     }
     // 5. if the selected ball is "master ball", then tot number limited to 1.
-    if (reqBallCollection.balls.masterBall > 0 && totBallCnt > 1) {
+    if (reqBallCollection.balls.masterball > 0 && totBallCnt > 1) {
       console.error(
         "[Invalid Input] number of maximum total ball is 1 for master ball"
       );
@@ -181,7 +181,7 @@ class Game {
     const srcBallCollection = costBallCollection["+"](
       player.getDiscountBalls()
     );
-    const masterBallCnt = srcBallCollection.balls.masterBall;
+    const masterballCnt = srcBallCollection.balls.masterball;
     const remainBallCnt = Object.values(
       boardCard.neededBallsForCapturing["-"](srcBallCollection).balls
     ).reduce((acc, value) => acc + value);
@@ -189,7 +189,7 @@ class Game {
     // TODO: select validation way.
     // if we use "===", then check correction,
     // if we use "<", then check sufficiency.
-    if (masterBallCnt < remainBallCnt) {
+    if (masterballCnt < remainBallCnt) {
       console.error(
         `[Invalid Input] player(${playerIdx})'s ball isn't enough to buy card(${cardId})`
       );
@@ -225,18 +225,18 @@ class Game {
       return false;
     }
     const desiredOpen: { [key in CardType]: number } = {
-      "1단계": 4,
-      "2단계": 4,
-      "3단계": 4,
-      희귀: 1,
-      전설: 1,
+      Tier1: 4,
+      Tier2: 4,
+      Tier3: 4,
+      Rare: 1,
+      Legendary: 1,
     };
     const curOpen: { [key in CardType]: number } = {
-      "1단계": 0,
-      "2단계": 0,
-      "3단계": 0,
-      희귀: 0,
-      전설: 0,
+      Tier1: 0,
+      Tier2: 0,
+      Tier3: 0,
+      Rare: 0,
+      Legendary: 0,
     };
     this.boardCards.forEach((boardCard) => {
       if (boardCard.open) {

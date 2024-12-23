@@ -37,62 +37,62 @@ Papa.parse(`${process.env.PUBLIC_URL}/data/pokemon.csv`, {
             pokemon: pokemons[Number(cardInfo["pokemon_no"])],
 
             neededBallsForCapturing: new BallCollection({
-              masterBall: Number(cardInfo["required_master_ball_cnt"]),
-              ultraBall: Number(cardInfo["required_ultra_ball_cnt"]),
-              healBall: Number(cardInfo["required_heal_ball_cnt"]),
-              quickBall: Number(cardInfo["required_quick_ball_cnt"]),
-              greatBall: Number(cardInfo["required_great_ball_cnt"]),
-              pokeBall: Number(cardInfo["required_poke_ball_cnt"]),
+              masterball: Number(cardInfo["required_master_ball_cnt"]),
+              ultraball: Number(cardInfo["required_ultra_ball_cnt"]),
+              healball: Number(cardInfo["required_heal_ball_cnt"]),
+              quickball: Number(cardInfo["required_quick_ball_cnt"]),
+              greatball: Number(cardInfo["required_great_ball_cnt"]),
+              pokeball: Number(cardInfo["required_poke_ball_cnt"]),
             }),
             neededBallsForEvolution: new BallCollection({
-              masterBall:
-                cardInfo["evolution_ball_type"] === "마스터볼"
+              masterball:
+                cardInfo["evolution_ball_type"] === "masterball"
                   ? Number(cardInfo["evolution_ball_cnt"])
                   : 0,
-              ultraBall:
-                cardInfo["evolution_ball_type"] === "울트라볼"
+              ultraball:
+                cardInfo["evolution_ball_type"] === "ultraball"
                   ? Number(cardInfo["evolution_ball_cnt"])
                   : 0,
-              healBall:
-                cardInfo["evolution_ball_type"] === "힐볼"
+              healball:
+                cardInfo["evolution_ball_type"] === "healball"
                   ? Number(cardInfo["evolution_ball_cnt"])
                   : 0,
-              quickBall:
-                cardInfo["evolution_ball_type"] === "퀵볼"
+              quickball:
+                cardInfo["evolution_ball_type"] === "quickball"
                   ? Number(cardInfo["evolution_ball_cnt"])
                   : 0,
-              greatBall:
-                cardInfo["evolution_ball_type"] === "슈퍼볼"
+              greatball:
+                cardInfo["evolution_ball_type"] === "greatball"
                   ? Number(cardInfo["evolution_ball_cnt"])
                   : 0,
-              pokeBall:
-                cardInfo["evolution_ball_type"] === "몬스터볼"
+              pokeball:
+                cardInfo["evolution_ball_type"] === "pokeball"
                   ? Number(cardInfo["evolution_ball_cnt"])
                   : 0,
             }),
             rewardBalls: new BallCollection({
-              masterBall:
-                cardInfo["reward_ball_type"] === "마스터볼"
+              masterball:
+                cardInfo["reward_ball_type"] === "masterball"
                   ? Number(cardInfo["reward_ball_cnt"])
                   : 0,
-              ultraBall:
-                cardInfo["reward_ball_type"] === "울트라볼"
+              ultraball:
+                cardInfo["reward_ball_type"] === "ultraball"
                   ? Number(cardInfo["reward_ball_cnt"])
                   : 0,
-              healBall:
-                cardInfo["reward_ball_type"] === "힐볼"
+              healball:
+                cardInfo["reward_ball_type"] === "healball"
                   ? Number(cardInfo["reward_ball_cnt"])
                   : 0,
-              quickBall:
-                cardInfo["reward_ball_type"] === "퀵볼"
+              quickball:
+                cardInfo["reward_ball_type"] === "quickball"
                   ? Number(cardInfo["reward_ball_cnt"])
                   : 0,
-              greatBall:
-                cardInfo["reward_ball_type"] === "슈퍼볼"
+              greatball:
+                cardInfo["reward_ball_type"] === "greatball"
                   ? Number(cardInfo["reward_ball_cnt"])
                   : 0,
-              pokeBall:
-                cardInfo["reward_ball_type"] === "몬스터볼"
+              pokeball:
+                cardInfo["reward_ball_type"] === "pokeball"
                   ? Number(cardInfo["reward_ball_cnt"])
                   : 0,
             }),

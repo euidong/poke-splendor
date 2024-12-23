@@ -7,13 +7,13 @@ const BoardStat = () => {
 
   return (
     <div>
-      [BoardState] # Player: {game.numPlayers} | 마스터볼:{" "}
-      {game.boardBallCollection?.balls.masterBall} | 하이퍼볼:{" "}
-      {game.boardBallCollection?.balls.ultraBall} | 퀵볼:{" "}
-      {game.boardBallCollection?.balls.quickBall} | 힐볼:{" "}
-      {game.boardBallCollection?.balls.healBall} | 슈퍼볼:{" "}
-      {game.boardBallCollection?.balls.greatBall} | 몬스터볼:{" "}
-      {game.boardBallCollection?.balls.pokeBall}
+      [BoardState] # Player: {game.numPlayers} | masterball:{" "}
+      {game.boardBallCollection?.balls.masterball} | ultraball:{" "}
+      {game.boardBallCollection?.balls.ultraball} | quickball:{" "}
+      {game.boardBallCollection?.balls.quickball} | healball:{" "}
+      {game.boardBallCollection?.balls.healball} | greatball:{" "}
+      {game.boardBallCollection?.balls.greatball} | pokeball:{" "}
+      {game.boardBallCollection?.balls.pokeball}
     </div>
   );
 };

@@ -7,7 +7,7 @@ const Board = () => {
     <div>
       <div>[Board]</div>
       {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "1단계" && card.open) {
+        if (card.type === "Tier1" && card.open) {
           return (
             <div>
               {card.type} {card.pokemon.name}
@@ -17,7 +17,7 @@ const Board = () => {
         return null;
       })}
       {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "2단계" && card.open) {
+        if (card.type === "Tier2" && card.open) {
           return (
             <div>
               {card.type} {card.pokemon.name}
@@ -27,7 +27,7 @@ const Board = () => {
         return null;
       })}
       {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "3단계" && card.open) {
+        if (card.type === "Tier3" && card.open) {
           return (
             <div>
               {card.type} {card.pokemon.name}
@@ -37,7 +37,7 @@ const Board = () => {
         return null;
       })}
       {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "희귀" && card.open) {
+        if (card.type === "Rare" && card.open) {
           return (
             <div>
               {card.type} {card.pokemon.name}
@@ -47,7 +47,7 @@ const Board = () => {
         return null;
       })}
       {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "전설" && card.open) {
+        if (card.type === "Legendary" && card.open) {
           return (
             <div>
               {card.type} {card.pokemon.name}

@@ -1,7 +1,7 @@
 import { IPokemon } from "./pokemon";
 import { IBallCollection } from "./ballCollection";
 
-const CardTypes = ["1단계", "2단계", "3단계", "희귀", "전설"] as const;
+const CardTypes = ["Tier1", "Tier2", "Tier3", "Rare", "Legendary"] as const;
 type CardType = (typeof CardTypes)[number];
 
 interface ICard {

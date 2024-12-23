@@ -1,10 +1,10 @@
 const BallTypes = [
-  "masterBall",
-  "ultraBall",
-  "quickBall",
-  "healBall",
-  "greatBall",
-  "pokeBall",
+  "masterball",
+  "ultraball",
+  "quickball",
+  "healball",
+  "greatball",
+  "pokeball",
 ] as const;
 
 type BallType = (typeof BallTypes)[number];
