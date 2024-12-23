@@ -4,6 +4,7 @@ import "./main.scss";
 
 const Main = () => {
   const { view, game } = useStores();
+
   const [numPlayers, setNumPlayers] = useState(0);
   return (
     <div>
@@ -20,7 +21,7 @@ const Main = () => {
         disabled={!(numPlayers > 1 && numPlayers < 5)}
         onClick={() => {
           view.set(view.name === "main" ? "play" : "main");
-          game.setNumPlayers(numPlayers);
+          game.init(numPlayers);
           console.log(view.name);
         }}
       >

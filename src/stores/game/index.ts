@@ -201,7 +201,7 @@ class Game {
       player.getDiscountBalls()
     );
     player.ballCollection["-="](actualBc);
-    this.boardCards = this.boardCards.filter((bc) => boardCard.id !== bc.id);
+    this.boardCards = this.boardCards.filter((bc) => boardCard?.id !== bc.id);
     this.openBoardCards();
     return true;
   }

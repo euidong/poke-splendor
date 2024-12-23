@@ -1,5 +1,5 @@
 import useStores from "../../hooks/useStores";
-import { BoardCard } from "../../types";
+import { BoardCard } from "../../stores/game/card";
 
 const Board = () => {
   const { game } = useStores();
