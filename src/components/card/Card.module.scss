@@ -6,7 +6,7 @@
     width: $width;
     height: $height;
     flex-direction: column;
-    border:1px solid black;
+    border: 1px solid black;
     border-radius: 10px;
     &__header {
       display: flex;
@@ -14,6 +14,7 @@
       align-items: center;
       justify-content: center;
       height: 42px;
+      border-radius: 9.3px 9.3px 0 0;
       &__score {
         display: flex;
         font-size: 20px;
@@ -84,6 +85,40 @@
     }
   }
   &--back {
-
+    display: flex;
+    flex-direction: column;
+    width: $width;
+    height: $height;
+    border: 1px solid black;
+    border-radius: 10px;
+    color: #F9CB00;
+    font-size: 14px;
+    font-weight: 700;
+    &__wrapper {
+      display: flex;
+      border: 5px solid white;
+      flex-direction: column;
+      flex: 1;
+      border-radius: 9.2px;
+      &__header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+      }
+      &__body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        margin-top: 10px;
+        flex: 1;
+      }
+      &__footer {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
   }
 }

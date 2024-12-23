@@ -9,9 +9,9 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
 - [x] Base Moderator (Document Event Subscription)
 - [ ] Base UI
   - [x] Collect Image files (Poke Ball, Pokemon, Background, Number, etc.)
-  - [ ] Implement Card UI (Back, and Front)
+  - [x] Implement Card UI (Back, and Front)
     - [x] Front
-    - [ ] Back
+    - [x] Back
   - [ ] Implement Ball Token UI
   - [ ] Implement Controller UI
   - [ ] Implement Board UI

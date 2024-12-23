@@ -1,5 +1,22 @@
 .card_list {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  &__wrapper {
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    &__title {
+      display: flex;
+      font-size: 30px;
+      font-weight: 700;
+    }
+    &__cards {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      & > div {
+        margin: 5px;
+      }
+    }
+  } 
 }

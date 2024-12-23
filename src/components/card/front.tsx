@@ -1,7 +1,6 @@
 import styles from "./Card.module.scss";
 import { BallType } from "../../stores/game/ball";
 import {
-  ballTypeToUrl,
   pokeNoToName,
   pokeNoToNextEvolutionPokemonNo,
   pokeNoToUrl,
@@ -54,7 +53,7 @@ const CardFront = ({
       : reward_ball_type === "ultraball"
       ? "#767170"
       : reward_ball_type === "quickball"
-      ? "#4AA5D6"
+      ? "#FCDF55"
       : reward_ball_type === "healball"
       ? "#E0A1C2"
       : "#7753AB";

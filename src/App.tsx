@@ -12,7 +12,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={view.name === "main" ? <Main /> : <Play />} />
-        <Route path="/card-list" element={<CardList />} />
+        <Route path="/cards" element={<CardList />} />
       </Routes>
     </BrowserRouter>
   );
