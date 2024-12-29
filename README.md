@@ -8,13 +8,13 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
 - [x] Base Logic (Poke Splender)
 - [x] Base Moderator (Document Event Subscription)
 - [ ] Base UI
-  - [x] Collect Image files (Poke Ball, Pokemon, Background, Number, etc.)
+  - [x] Collect Image files (Poke Ball, Pokemon, Background, Character, etc.)
   - [x] Implement Card UI (Back, and Front)
     - [x] Front
     - [x] Back
-  - [ ] Implement Ball Token UI
+  - [x] Implement Ball Token UI
+  - [x] Implement Board UI
   - [ ] Implement Controller UI
-  - [ ] Implement Board UI
   - [ ] Implement Onboarding UI
   - [ ] Select Font, size, etc.
 - [ ] WebRTC setup

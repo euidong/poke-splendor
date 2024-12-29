@@ -1,21 +1,38 @@
-import useStores from "../../hooks/useStores";
-import Game from "../../stores/game";
+import styles from "./BoardStat.module.scss";
 
-const BoardStat = () => {
-  const stores = useStores();
-  const game: Game = stores.game;
+import { BallTypes, BallType } from "../../stores/game/ball";
+import Ball from "../ball";
+import { IBallCollection } from "../../stores/game/ballCollection";
 
+type BoardStatProps = {
+  [key in BallType]: number;
+};
+
+const BoardStat = (props: BoardStatProps) => {
   return (
-    <div>
-      [BoardState] # Player: {game.numPlayers} | masterball:{" "}
-      {game.boardBallCollection?.balls.masterball} | ultraball:{" "}
-      {game.boardBallCollection?.balls.ultraball} | quickball:{" "}
-      {game.boardBallCollection?.balls.quickball} | healball:{" "}
-      {game.boardBallCollection?.balls.healball} | greatball:{" "}
-      {game.boardBallCollection?.balls.greatball} | pokeball:{" "}
-      {game.boardBallCollection?.balls.pokeball}
+    <div className={styles["board_stat"]}>
+      {BallTypes.map((ballType) => (
+        <div className={styles["board_stat__ball"]}>
+          <div className={styles["board_stat__ball__image"]}>
+            <Ball ballType={ballType} />
+          </div>
+          <div className={styles["board_stat__ball__cnt"]}>
+            {props[ballType]}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
 
+const ballCollectionObjectToBoardStatProps = (
+  ballCollection: IBallCollection
+): BoardStatProps => {
+  return {
+    ...ballCollection.balls,
+  };
+};
+
+export { ballCollectionObjectToBoardStatProps };
+export type { BoardStatProps };
 export default BoardStat;

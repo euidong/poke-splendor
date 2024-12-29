@@ -1,0 +1,21 @@
+.ball_list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px;
+  &__title {
+    display: flex;
+    font-size: 30px;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+  &__wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    & > div {
+      margin: 10px;
+    }
+  }
+  
+}

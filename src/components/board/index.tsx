@@ -1,61 +1,37 @@
-import useStores from "../../hooks/useStores";
+import styles from "./Board.module.scss";
 import { BoardCard } from "../../stores/game/card";
+import Card, { cardObjectToCardProps } from "../card";
 
-const Board = () => {
-  const { game } = useStores();
+type BoardProps = {
+  boardCards: BoardCard[];
+};
+
+const Board = ({ boardCards }: BoardProps) => {
   return (
-    <div>
-      <div>[Board]</div>
-      {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "Tier1" && card.open) {
-          return (
-            <div>
-              {card.type} {card.pokemon.name}
-            </div>
-          );
-        }
-        return null;
+    <div className={styles["board"]}>
+      {["Tier3", "Tier2", "Tier1"].map((cardType) => {
+        return (
+          <div className={styles["board__card_list"]}>
+            {boardCards.map((card: BoardCard) => {
+              if (card.type === cardType && card.open) {
+                return <Card {...cardObjectToCardProps(card, "Front")} />;
+              }
+              return null;
+            })}
+          </div>
+        );
       })}
-      {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "Tier2" && card.open) {
-          return (
-            <div>
-              {card.type} {card.pokemon.name}
-            </div>
-          );
-        }
-        return null;
-      })}
-      {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "Tier3" && card.open) {
-          return (
-            <div>
-              {card.type} {card.pokemon.name}
-            </div>
-          );
-        }
-        return null;
-      })}
-      {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "Rare" && card.open) {
-          return (
-            <div>
-              {card.type} {card.pokemon.name}
-            </div>
-          );
-        }
-        return null;
-      })}
-      {game.boardCards.map((card: BoardCard) => {
-        if (card.type === "Legendary" && card.open) {
-          return (
-            <div>
-              {card.type} {card.pokemon.name}
-            </div>
-          );
-        }
-        return null;
-      })}
+      <div className={styles["board__card_list"]}>
+        {boardCards.map((card: BoardCard) => {
+          if (
+            (card.type === "Legendary" || card.type === "Rare") &&
+            card.open
+          ) {
+            return <Card {...cardObjectToCardProps(card, "Front")} />;
+          }
+          return null;
+        })}
+      </div>
     </div>
   );
 };

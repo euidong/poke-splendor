@@ -1,36 +1,60 @@
-import useStores from "../../hooks/useStores";
-import Game from "../../stores/game";
+import styles from "./PlayerStat.module.scss";
+import { ICard } from "../../stores/game/card";
+import BoardStat, { BoardStatProps } from "../boardStat";
+import Character from "../../chracter";
+import { CharacterType } from "../../stores/game/character";
+import Card, { cardObjectToCardProps } from "../card";
 
-const PlayerStat = () => {
-  const stores = useStores();
-  const game: Game = stores.game;
+type PlayerStatProps =
+  | {
+      characterName: CharacterType;
+      capturedCards: ICard[];
+      reservedCards: ICard[];
+      evolutionCnt: number;
+      score: number;
+    } & BoardStatProps;
 
+const PlayerStat = ({
+  characterName,
+  capturedCards,
+  reservedCards,
+  evolutionCnt,
+  score,
+  ...balls
+}: PlayerStatProps) => {
   return (
-    <div>
-      <div>[PlayerStat]</div>
-
-      <ul>
-        {game.players.map((player) => (
-          <li>
-            <div>{player.character}</div>
-            <div>
-              masterball: {player.ballCollection.balls.masterball} | ultraball:{" "}
-              {player.ballCollection.balls.ultraball} | quickball:{" "}
-              {player.ballCollection.balls.quickball} | healball:{" "}
-              {player.ballCollection.balls.healball} | greatball:{" "}
-              {player.ballCollection.balls.greatball} | pokeball:{" "}
-              {player.ballCollection.balls.pokeball}
-            </div>
-            <div># 진화한 포켓몬: {player.getEvolutionCnt()}</div>
-            <ul>
-              <div>잡은 포켓몬</div>
-              {player.capturedCards.map((card) => (
-                <li>{card.pokemon.name}</li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+    <div className={styles["player_stat"]}>
+      <div className={styles["player_stat__profile"]}>
+        <div className={styles["player_stat__profile__character_wrapper"]}>
+          <Character type={characterName} />
+        </div>
+        <div className={styles["player_stat__profile__evolution"]}>
+          Evolution: {evolutionCnt}
+        </div>
+        <div className={styles["player_stat__profile__score"]}>
+          Score: {score}
+        </div>
+        <div className={styles["player_stat__profile__card"]}>
+          Card: {capturedCards.length}
+        </div>
+      </div>
+      <div className={styles["player_stat__ball_list"]}>
+        <BoardStat {...balls} />
+      </div>
+      {capturedCards.length > 0 && (
+        <div className={styles["player_stat__card_list"]}>
+          {capturedCards.map((card) => (
+            <Card {...cardObjectToCardProps(card, "Front")} />
+          ))}
+        </div>
+      )}
+      {reservedCards.length > 0 && (
+        <div className={styles["player_stat__card_list"]}>
+          {reservedCards.map((card) => (
+            <Card {...cardObjectToCardProps(card, "Front")} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

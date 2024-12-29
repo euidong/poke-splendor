@@ -1,6 +1,7 @@
 import styles from "./Card.module.scss";
 import { BallType } from "../../stores/game/ball";
 import {
+  ballTypeToColor,
   pokeNoToName,
   pokeNoToNextEvolutionPokemonNo,
   pokeNoToUrl,
@@ -32,39 +33,14 @@ const CardFront = ({
     required_great_ball_cnt,
     required_poke_ball_cnt
   );
-  const backgroundColor =
-    reward_ball_type === "pokeball"
-      ? "#F9B499"
-      : reward_ball_type === "greatball"
-      ? "#B6E4FB"
-      : reward_ball_type === "ultraball"
-      ? "#D8D8DB"
-      : reward_ball_type === "quickball"
-      ? "#FDFAC5"
-      : reward_ball_type === "healball"
-      ? "#FEEFF6"
-      : "#5077B3";
-
-  const headerColor =
-    reward_ball_type === "pokeball"
-      ? "#F37562"
-      : reward_ball_type === "greatball"
-      ? "#55A5D0"
-      : reward_ball_type === "ultraball"
-      ? "#767170"
-      : reward_ball_type === "quickball"
-      ? "#FCDF55"
-      : reward_ball_type === "healball"
-      ? "#E0A1C2"
-      : "#7753AB";
   return (
     <div
       className={styles["card--front"]}
-      style={{ backgroundColor: backgroundColor }}
+      style={{ backgroundColor: ballTypeToColor(reward_ball_type, false) }}
     >
       <header
         className={styles["card--front__header"]}
-        style={{ backgroundColor: headerColor }}
+        style={{ backgroundColor: ballTypeToColor(reward_ball_type, true) }}
       >
         <div className={styles["card--front__header__score"]}>{score}</div>
         {nextEvolutionPokemonNo && (

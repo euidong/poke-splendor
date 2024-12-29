@@ -1,0 +1,52 @@
+.player_stat {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 350px;
+  padding: 5px;
+  
+  &__profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid black;
+    padding: 5px;
+    &__character_wrapper {
+      display: flex;
+      flex:1;
+      border-right: 1px solid black;
+    }
+    &__evolution {
+      display: flex;
+      flex-direction: row;
+      padding: 5px;
+      border-right: 1px solid black;
+    }
+    &__score {
+      display: flex;
+      flex-direction: row;
+      padding: 5px;
+      border-right: 1px solid black;
+    }
+    &__card {
+      display: flex;
+      flex-direction: row;
+      padding: 5px;
+    }
+  }
+  &__ball_list {
+    padding: 5px;
+    display: flex;
+  }
+  &__card_list {
+    display: flex;
+    border-top: 1px solid black;
+    flex-wrap: wrap;
+    padding: 5px;
+    & > div {
+      margin: 5px;
+    }
+  }
+}

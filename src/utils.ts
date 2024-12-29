@@ -1,5 +1,6 @@
 import { pokemons } from "./stores/const";
 import { BallType } from "./stores/game/ball";
+import { CharacterType } from "./stores/game/character";
 
 const shuffle = (list: any[]) => {
   for (var i = list.length - 1; i >= 0; i--) {
@@ -31,10 +32,56 @@ const ballTypeToUrl = (ballType: BallType) => {
   return `${process.env.PUBLIC_URL}/images/balls/${ballType.toLowerCase()}.png`;
 };
 
+const characterTypeToUrl = (characterType: CharacterType) => {
+  return `${
+    process.env.PUBLIC_URL
+  }/images/characters/${characterType.toLowerCase()}.png`;
+};
+
+const ballTypeToColor = (ballType: BallType, isMain: boolean) => {
+  if (isMain) {
+    switch (ballType) {
+      case "pokeball":
+        return "#F37562";
+      case "greatball":
+        return "#55A5D0";
+      case "ultraball":
+        return "#767170";
+      case "quickball":
+        return "#FCDF55";
+      case "healball":
+        return "#E0A1C2";
+      case "masterball":
+        return "#5E3A84";
+      default:
+        return "#FFF";
+    }
+  } else {
+    switch (ballType) {
+      case "pokeball":
+        return "#F9B499";
+      case "greatball":
+        return "#B6E4FB";
+      case "ultraball":
+        return "#D8D8DB";
+      case "quickball":
+        return "#FDFAC5";
+      case "healball":
+        return "#FEEFF6";
+      case "masterball":
+        return "#865EAF";
+      default:
+        return "#FFF";
+    }
+  }
+};
+
 export {
   shuffle,
   pokeNoToName,
   pokeNoToNextEvolutionPokemonNo,
   pokeNoToUrl,
   ballTypeToUrl,
+  characterTypeToUrl,
+  ballTypeToColor,
 };
