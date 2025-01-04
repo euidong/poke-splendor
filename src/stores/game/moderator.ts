@@ -33,7 +33,9 @@ class LocalModerator implements IModerator {
   myPlayerIdx: number;
   centralPlayerIdx: number;
 
-  init: () => Nullable<Error> = () => {
+  init = (numPlayers: number) => {
+    this.game.init(numPlayers);
+    this.publish({ type: "UpdateResult", data: { game: this.game } });
     return null;
   };
 
@@ -87,6 +89,28 @@ class LocalModerator implements IModerator {
             }
           } else if (e.detail.type === "UpdateResult") {
             // do nothing
+          } else if (e.detail.type === "ReservePokeCard") {
+            const success = this.game.reservePokemonCard(
+              e.detail.playerIdx,
+              e.detail.data.cardId
+            );
+            if (success) {
+              this.publish({ type: "UpdateResult", data: { game: this.game } });
+            } else {
+              this.publish({
+                type: "ErrorRequest",
+                data: { request: e.detail },
+              });
+            }
+          } else if (e.detail.type === "FinishTurn") {
+            if (this.game.turn !== e.detail.playerIdx) {
+              this.publish({
+                type: "ErrorRequest",
+                data: { request: e.detail },
+              });
+            }
+            this.game.nextTurn();
+            this.publish({ type: "UpdateResult", data: { game: this.game } });
           } else if (e.detail.type === "ErrorRequest") {
             // do nothing
           }
@@ -100,6 +124,10 @@ class LocalModerator implements IModerator {
             // do nothing
           } else if (e.detail.type === "UpdateResult") {
             this.game = e.detail.data.game;
+          } else if (e.detail.type === "ReservePokeCard") {
+            // do nothing
+          } else if (e.detail.type === "FinishTurn") {
+            // do nothing
           } else if (e.detail.type === "ErrorRequest") {
             console.error(`[Error] during proccess ${e.detail.data}`);
           }
@@ -125,23 +153,18 @@ class LocalModerator implements IModerator {
     this.game = game;
     this.myPlayerIdx = myPlayerIdx;
     this.centralPlayerIdx = centralPlayerIdx;
-    if (myPlayerIdx === centralPlayerIdx) {
-      this.init();
-      this.publish({
-        type: "UpdateResult",
-        data: { game: this.game },
-      });
-    } else {
-      this.subscribe();
-    }
+
+    this.subscribe();
   }
 }
 
 const ActionEventTypes = [
   "ModifyBallCollection",
   "CapturePokeCard",
+  "ReservePokeCard",
   "EvolvePokeCard",
   "UpdateResult",
+  "FinishTurn",
   "ErrorRequest",
 ] as const;
 
@@ -165,12 +188,20 @@ export type ErrorRequestData = {
   request: ActionEvents;
 };
 
+export type ReservePokeCardData = {
+  cardId: number;
+};
+
+export type FinishTurnData = {};
+
 type ActionEventDataMap = {
   ModifyBallCollection: ModifyBallCollectionData;
   CapturePokeCard: CapturePokeCardData;
   EvolvePokeCard: EvolvePokeCardData;
   UpdateResult: UpdateResultData;
   ErrorRequest: ErrorRequestData;
+  ReservePokeCard: ReservePokeCardData;
+  FinishTurn: FinishTurnData;
 };
 
 export type ActionEvent<T extends ActionEventType> = {
@@ -192,5 +223,15 @@ type ActionEvents = {
   [K in ActionEventType]: ActionEvent<K>;
 }[ActionEventType];
 
+const startLocalGame = (numPlayers: number) => {
+  const game = new Game();
+  const moderators = [];
+  for (let i = 0; i < numPlayers; i++) {
+    moderators.push(new LocalModerator(game, i, 0));
+  }
+  moderators[0].init(numPlayers);
+  return { game, moderators };
+};
+
 export type { IModerator };
-export { LocalModerator, WebRTCModerator };
+export { LocalModerator, WebRTCModerator, startLocalGame };

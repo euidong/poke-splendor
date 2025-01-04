@@ -1,0 +1,8 @@
+.play {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  > div {
+    margin-bottom: 3px;
+  }
+}

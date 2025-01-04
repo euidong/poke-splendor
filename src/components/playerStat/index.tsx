@@ -1,6 +1,6 @@
 import styles from "./PlayerStat.module.scss";
 import { ICard } from "../../stores/game/card";
-import BoardStat, { BoardStatProps } from "../boardStat";
+import BallCollection, { BallCollectionProps } from "../ballCollection";
 import Character from "../../chracter";
 import { CharacterType } from "../../stores/game/character";
 import Card, { cardObjectToCardProps } from "../card";
@@ -12,7 +12,7 @@ type PlayerStatProps =
       reservedCards: ICard[];
       evolutionCnt: number;
       score: number;
-    } & BoardStatProps;
+    } & BallCollectionProps;
 
 const PlayerStat = ({
   characterName,
@@ -39,7 +39,7 @@ const PlayerStat = ({
         </div>
       </div>
       <div className={styles["player_stat__ball_list"]}>
-        <BoardStat {...balls} />
+        <BallCollection {...balls} />
       </div>
       {capturedCards.length > 0 && (
         <div className={styles["player_stat__card_list"]}>

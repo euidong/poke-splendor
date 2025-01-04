@@ -14,9 +14,10 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
     - [x] Back
   - [x] Implement Ball Token UI
   - [x] Implement Board UI
-  - [ ] Implement Controller UI
+  - [x] Implement Controller UI
   - [ ] Implement Onboarding UI
   - [ ] Select Font, size, etc.
+- [ ] Local Game setup
 - [ ] WebRTC setup
   - [ ] Select STUN Server
   - [ ] Implement WebRTC Moderator

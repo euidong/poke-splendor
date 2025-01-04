@@ -31,7 +31,7 @@ class Game {
     for (let i = 0; i < this.numPlayers; ++i) {
       this.initPlayer(i);
     }
-    this.round = 0;
+    this.round = 1;
     this.turn = 0;
   }
 
@@ -57,6 +57,21 @@ class Game {
 
     this.shuffleBoardCards();
     this.openBoardCards();
+  }
+
+  nextTurn() {
+    if (
+      this.turn === undefined ||
+      this.round === undefined ||
+      this.numPlayers === undefined
+    ) {
+      console.error(
+        "[Invalid Environment] You need to initialize game before starting"
+      );
+      return false;
+    }
+    this.turn = (this.turn + 1) % this.numPlayers;
+    if (this.turn === 0) this.round++;
   }
 
   // TODO: change not to touch balls object in ball collector.
@@ -134,6 +149,40 @@ class Game {
 
     this.players[playerIdx].ballCollection = nbc;
     return true;
+  }
+
+  reservePokemonCard(playerIdx: number, cardId: number) {
+    const player = this.players[playerIdx];
+
+    // [validate request]
+    // 1. check whether boardCard exist
+    if (this.boardCards === undefined) {
+      console.error(
+        "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
+      );
+      return false;
+    }
+    // 2. check whether card exist in game or not
+    const card = cards[cardId];
+    if (card === undefined) {
+      console.error(`[Invalid Input] card(${cardId}) isn't exist in game`);
+      return false;
+    }
+    // 3. check whether card exist in board or not
+    let boardCard: BoardCard | undefined = undefined;
+    for (let i = 0; i < this.boardCards.length; ++i) {
+      if (cardId === this.boardCards[i].id) {
+        boardCard = this.boardCards[i];
+        break;
+      }
+    }
+    if (boardCard === undefined) {
+      console.error(`[Invalid Input] card(${cardId}) isn't exist in board`);
+      return false;
+    }
+
+    // [update]
+    player.resevedCards.push(card);
   }
 
   capturePokemonCard(

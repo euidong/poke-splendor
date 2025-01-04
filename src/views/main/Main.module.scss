@@ -1,0 +1,49 @@
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  &__form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+    align-items: center;
+    &__input_wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 130px;
+      align-items: flex-end;
+      &__title {
+        display: flex;
+        color: black;
+        font-size: 13px;
+        margin-right: 5px;
+      }
+      &__input {
+        width: 10px;
+        padding: 0;
+        border:none;
+        border-bottom: 1px solid black;
+        outline: none;
+        outline-color: black;
+        text-align: end;
+        /* Chrome, Safari, Edge, Opera */
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        /* Firefox  */
+        &[type='number'] {
+          -moz-appearance: textfield;
+        }
+      }
+    }
+    &__submit {
+      margin-top: 5px;
+      width: 150px;
+
+    }
+  }
+}

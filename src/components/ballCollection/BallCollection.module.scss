@@ -1,0 +1,33 @@
+.ball_collection {
+  width: 350px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 10px;
+  &__ball {
+    display: flex;
+    align-items: flex-end;
+    &__cnt {
+      &__input {
+        display: flex;
+        border: none;
+        border-bottom: 1px solid black;
+        outline: none;
+        width: 8px;
+        text-align: center;
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox  */
+      input[type='number'] {
+        -moz-appearance: textfield;
+      }
+    }
+  }
+}

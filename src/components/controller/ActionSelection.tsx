@@ -1,16 +1,26 @@
+import styles from "./Controller.module.scss";
 import { ActionType } from ".";
-import { Nullable } from "../../types";
 
 type ActionSelectionProps = {
-  setAction: React.Dispatch<React.SetStateAction<Nullable<ActionType>>>;
+  setAction: (action: ActionType) => void;
 };
 
 const ActionSelection = ({ setAction }: ActionSelectionProps) => {
   return (
-    <div>
-      <button onClick={() => setAction("Capturing")}>Capturing</button>
-      <button onClick={() => setAction("BallSelection")}>Ball Selection</button>
-    </div>
+    <>
+      <button
+        className={styles["controller__body--action_selection__button"]}
+        onClick={() => setAction("Capturing")}
+      >
+        Capturing
+      </button>
+      <button
+        className={styles["controller__body--action_selection__button"]}
+        onClick={() => setAction("BallSelection")}
+      >
+        Ball Selection
+      </button>
+    </>
   );
 };
 

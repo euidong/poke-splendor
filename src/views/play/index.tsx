@@ -1,38 +1,52 @@
-import "./play.scss";
+import styles from "./Play.module.scss";
 
-import BoardStat, {
-  ballCollectionObjectToBoardStatProps,
-} from "../../components/boardStat";
+import BallCollection, {
+  ballCollectionObjectToBallCollectionProps,
+} from "../../components/ballCollection";
 import Board from "../../components/board";
 import PlayerStat from "../../components/playerStat";
 import Controller from "../../components/controller";
 import useStores from "../../hooks/useStores";
-import Game from "../../stores/game";
+import Frame from "../../components/Frame";
+import { IModerator } from "../../stores/game/moderator";
 
-const Play = () => {
+type PlayProps = {
+  playerIdx: number;
+};
+
+const Play = ({ playerIdx }: PlayProps) => {
   const stores = useStores();
-  const game: Game = stores.game;
+  const moderator: IModerator = stores.moderators[playerIdx];
+  const game = moderator.game;
 
-  return (
-    <div>
-      {game.boardBallCollection && (
-        <BoardStat
-          {...ballCollectionObjectToBoardStatProps(game.boardBallCollection)}
-        />
-      )}
-      {game.boardCards && <Board boardCards={game.boardCards} />}
-      {game.players.map((player) => (
-        <PlayerStat
-          characterName={player.character}
-          capturedCards={player.capturedCards}
-          reservedCards={player.resevedCards}
-          evolutionCnt={player.getEvolutionCnt()}
-          score={player.getScore()}
-          {...ballCollectionObjectToBoardStatProps(player.ballCollection)}
-        />
-      ))}
+  return game.turn === moderator.myPlayerIdx ? (
+    <Frame debug={true}>
+      <div className={styles["play"]}>
+        {game.boardBallCollection && (
+          <BallCollection
+            {...ballCollectionObjectToBallCollectionProps(
+              game.boardBallCollection
+            )}
+          />
+        )}
+        {game.boardCards && <Board boardCards={game.boardCards} />}
+        {game.players.map((player) => (
+          <PlayerStat
+            characterName={player.character}
+            capturedCards={player.capturedCards}
+            reservedCards={player.resevedCards}
+            evolutionCnt={player.getEvolutionCnt()}
+            score={player.getScore()}
+            {...ballCollectionObjectToBallCollectionProps(
+              player.ballCollection
+            )}
+          />
+        ))}
+      </div>
       <Controller />
-    </div>
+    </Frame>
+  ) : (
+    <></>
   );
 };
 

@@ -1,3 +1,142 @@
 .controller {
   width: 360px;
+  display: flex;
+  flex-direction: column;
+  
+  &__header {
+    display: flex;
+    height: 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: #D9D9D9;
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+  }
+  &__body {
+    @mixin body {
+      display: flex;
+      padding: 10px;
+    }
+    @mixin button {
+      width: 100px;
+      height: 50px;
+      border: 1px solid black;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      &:hover {
+        background-color: #D9D9D9;
+      }
+    }
+
+    &--action_selection {
+      @include body;
+      flex-direction: row;
+      justify-content: space-around;
+      &__button {
+        @include button; 
+      }
+    }
+    &--ball_selection {
+      @include body;
+      flex-direction: column;
+      &__title {
+        display: flex;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+      &__description {
+        display: flex;
+        margin-bottom: 10px;
+        color: #808080;
+        font-size: 13px;
+      }
+      &__content {
+        display: flex;
+        flex-direction: column;
+        &__ball_list {
+          margin-bottom: 10px;
+          display: flex;
+        }
+        &__button_list {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          &__button {
+            @include button;
+          }
+        }
+      }
+    }
+    &--capturing {
+      @include body;
+      flex-direction: column;
+      &__title {
+        display: flex;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+      &__description {
+        display: flex;
+        margin-bottom: 10px;
+        color: #808080;
+        font-size: 13px;
+      }
+      &__content {
+        display: flex;
+        flex-direction: column;
+        &__button_list {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          &__button {
+            @include button;
+          }
+        }
+      }
+    }
+    &--evolution {
+      @include body;
+      flex-direction: column;
+      &__title {
+        display: flex;
+        margin-bottom: 10px;
+      }
+      &__content {
+        display: flex;
+        flex-direction: column;
+        &__button_list {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          &__button {
+            @include button;
+          }
+        }
+      }
+    }
+    &--reservation {
+      @include body;
+      flex-direction: column;
+      &__title {
+        display: flex;
+        margin-bottom: 10px;
+      }
+      &__content {
+        display: flex;
+        flex-direction: column;
+        &__button_list {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          &__button {
+            @include button;
+          }
+        }
+      }
+    }
+  }
 }
