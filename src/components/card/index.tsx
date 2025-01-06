@@ -31,6 +31,7 @@ const cardObjectToCardProps = (
   });
   return {
     side: side,
+    card_id: card.id,
     card_type: card.type,
     pokemon_no: card.pokemon.no,
     required_master_ball_cnt: card.neededBallsForCapturing.balls.masterball,

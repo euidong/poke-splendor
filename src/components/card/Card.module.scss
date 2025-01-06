@@ -8,6 +8,9 @@
     flex-direction: column;
     border: 1px solid black;
     border-radius: 10px;
+    &:hover {
+      cursor: pointer;
+    }
     &__header {
       display: flex;
       flex-direction: row;

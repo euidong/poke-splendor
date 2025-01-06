@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 import { cards } from "../const";
 import { shuffle } from "../../utils";
-import { CardType, BoardCard } from "./card";
+import { CardType, BoardCard, Card } from "./card";
 import { Player, IPlayer } from "./player";
 import { BallCollection, IBallCollection } from "./ballCollection";
 import { BallTypes } from "./ball";
@@ -141,6 +141,19 @@ class Game {
       console.error("[Invalid Input] number of maximum owned ball is 10");
       return false;
     }
+    // 7. if the boardBallCollection doesn't have enough balls for the request, raise Error
+    if (this.boardBallCollection === undefined) {
+      console.error(
+        "[Invalid Environment] BoardBallCollection isn't exist, You need to initialize game."
+      );
+      return false;
+    }
+    if (!this.boardBallCollection[">="](reqBallCollection)) {
+      console.error(
+        "[Invalid Input] boardBallCollection doesn't have enough balls for the request"
+      );
+      return false;
+    }
 
     // [update]
     for (let key of BallTypes) {
@@ -148,6 +161,7 @@ class Game {
     }
 
     this.players[playerIdx].ballCollection = nbc;
+    this.boardBallCollection = this.boardBallCollection["-"](reqBallCollection);
     return true;
   }
 
@@ -183,6 +197,10 @@ class Game {
 
     // [update]
     player.resevedCards.push(card);
+    this.boardCards = this.boardCards.filter((bc) => boardCard?.id !== bc.id);
+    this.openBoardCards();
+
+    return true;
   }
 
   capturePokemonCard(
@@ -200,13 +218,20 @@ class Game {
       );
       return false;
     }
-    // 2. check whether card exist in game or not
+    // 2. check whether board ballcollection exist
+    if (this.boardBallCollection === undefined) {
+      console.error(
+        "[Invalid Environment] BoardBallCollection isn't exist, You need to initialize game."
+      );
+      return false;
+    }
+    // 3. check whether card exist in game or not
     const card = cards[cardId];
     if (card === undefined) {
       console.error(`[Invalid Input] card(${cardId}) isn't exist in game`);
       return false;
     }
-    // 3. check whether card exist in board or not
+    // 4. check whether card exist in both of board or player hands, or not
     let boardCard: BoardCard | undefined = undefined;
     for (let i = 0; i < this.boardCards.length; ++i) {
       if (cardId === this.boardCards[i].id) {
@@ -214,11 +239,20 @@ class Game {
         break;
       }
     }
-    if (boardCard === undefined) {
-      console.error(`[Invalid Input] card(${cardId}) isn't exist in board`);
+    let reservedCard: Card | undefined = undefined;
+    for (let i = 0; i < player.resevedCards.length; ++i) {
+      if (cardId === player.resevedCards[i].id) {
+        reservedCard = player.resevedCards[i];
+        break;
+      }
+    }
+    if (boardCard === undefined && reservedCard === undefined) {
+      console.error(
+        `[Invalid Input] card(${cardId}) isn't exist in board and player hands`
+      );
       return false;
     }
-    // 4. check whether player has costing balls sent as a param
+    // 5. check whether player has costing balls sent as a param
     if (!player.ballCollection[">="](costBallCollection)) {
       console.error(
         `[Invalid Input] player(${playerIdx})'s cost balls are invalid (not enough)`
@@ -226,32 +260,35 @@ class Game {
       return false;
     }
 
-    // 5. check whether player has enough balls for buying this card.
+    // 6. check whether player has enough balls for buying this card.
     const srcBallCollection = costBallCollection["+"](
-      player.getDiscountBalls()
+      player.getDiscountBallCollection()
     );
     const masterballCnt = srcBallCollection.balls.masterball;
     const remainBallCnt = Object.values(
-      boardCard.neededBallsForCapturing["-"](srcBallCollection).balls
+      card.neededBallsForCapturing["-"](srcBallCollection).balls
     ).reduce((acc, value) => acc + value);
 
     // TODO: select validation way.
-    // if we use "===", then check correction,
+    // if we use "!==", then check correction,
     // if we use "<", then check sufficiency.
-    if (masterballCnt < remainBallCnt) {
+    if (masterballCnt !== remainBallCnt) {
       console.error(
-        `[Invalid Input] player(${playerIdx})'s ball isn't enough to buy card(${cardId})`
+        `[Invalid Input] player(${playerIdx})'s ball isn't match to buy card(${cardId})`
       );
       return false;
     }
 
     // [update]
-    const actualBc = boardCard.neededBallsForCapturing["-"](
-      player.getDiscountBalls()
-    );
-    player.ballCollection["-="](actualBc);
-    this.boardCards = this.boardCards.filter((bc) => boardCard?.id !== bc.id);
+    player.ballCollection = player.ballCollection["-"](costBallCollection);
+    this.boardBallCollection =
+      this.boardBallCollection["+"](costBallCollection);
+    player.capturedCards.push(card);
+
+    this.boardCards = this.boardCards.filter((bc) => card.id !== bc.id);
     this.openBoardCards();
+    player.resevedCards = player.resevedCards.filter((rc) => card.id !== rc.id);
+
     return true;
   }
 
@@ -380,7 +417,9 @@ class Game {
     }
 
     // 4. check whether player has enough balls for evolving this card.
-    if (!player.getDiscountBalls()[">="](tgtCard.neededBallsForEvolution)) {
+    if (
+      !player.getDiscountBallCollection()[">="](srcCard.neededBallsForEvolution)
+    ) {
       console.error(
         `[Invalid Input] player(${playerIdx})'s ball isn't enough to evolve to target card(${tgtCardId})`
       );
@@ -394,7 +433,9 @@ class Game {
     // - remove target board card in board
     // - open one more card
     if (isTgtInBoard) {
-      player.capturedCards.filter((card) => card.id !== srcCardId);
+      player.capturedCards = player.capturedCards.filter(
+        (card) => card.id !== srcCardId
+      );
       player.usedByEvolutionCards.push(srcCard);
 
       player.capturedCards.push(tgtCard);
@@ -408,7 +449,9 @@ class Game {
     // - add evolved card to player
     // - remove target board card in hand (reserved)
     else {
-      player.capturedCards.filter((card) => card.id !== srcCardId);
+      player.capturedCards = player.capturedCards.filter(
+        (card) => card.id !== srcCardId
+      );
       player.usedByEvolutionCards.push(srcCard);
 
       player.capturedCards.push(tgtCard);

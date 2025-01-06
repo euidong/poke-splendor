@@ -88,6 +88,10 @@
       &__content {
         display: flex;
         flex-direction: column;
+        &__ball_list {
+          margin-bottom: 10px;
+          display: flex;
+        }
         &__button_list {
           display: flex;
           flex-direction: row;
@@ -104,6 +108,12 @@
       &__title {
         display: flex;
         margin-bottom: 10px;
+      }
+      &__description {
+        display: flex;
+        margin-bottom: 10px;
+        color: #808080;
+        font-size: 13px;
       }
       &__content {
         display: flex;
@@ -124,6 +134,12 @@
       &__title {
         display: flex;
         margin-bottom: 10px;
+      }
+      &__description {
+        display: flex;
+        margin-bottom: 10px;
+        color: #808080;
+        font-size: 13px;
       }
       &__content {
         display: flex;

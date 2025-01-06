@@ -1,3 +1,4 @@
+import { makeAutoObservable } from "mobx";
 import Game from ".";
 import { Nullable } from "../../types";
 import { IBallCollection } from "./ballCollection";
@@ -155,6 +156,7 @@ class LocalModerator implements IModerator {
     this.centralPlayerIdx = centralPlayerIdx;
 
     this.subscribe();
+    makeAutoObservable(this);
   }
 }
 
@@ -230,8 +232,26 @@ const startLocalGame = (numPlayers: number) => {
     moderators.push(new LocalModerator(game, i, 0));
   }
   moderators[0].init(numPlayers);
-  return { game, moderators };
+  const lms = new LocalModerators(moderators);
+  return { game, lms };
 };
 
+class LocalModerators {
+  moderators: LocalModerator[] = [];
+
+  constructor(moderators: LocalModerator[] = []) {
+    this.moderators = moderators;
+    makeAutoObservable(this);
+  }
+
+  get(idx: number) {
+    return this.moderators[idx];
+  }
+
+  getAll() {
+    return this.moderators;
+  }
+}
+
 export type { IModerator };
-export { LocalModerator, WebRTCModerator, startLocalGame };
+export { LocalModerator, WebRTCModerator, startLocalGame, LocalModerators };

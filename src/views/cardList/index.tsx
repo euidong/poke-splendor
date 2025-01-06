@@ -16,6 +16,7 @@ const CardList = () => {
             <div className={styles["card_list__wrapper__cards"]}>
               <Card
                 side="Back"
+                card_id={1}
                 card_type={cardType}
                 pokemon_no={1}
                 required_master_ball_cnt={0}
@@ -55,6 +56,7 @@ const CardList = () => {
                   card.type === cardType && (
                     <Card
                       side="Front"
+                      card_id={card.id}
                       card_type={card.type}
                       pokemon_no={card.pokemon.no}
                       required_master_ball_cnt={

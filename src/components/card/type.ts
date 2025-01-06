@@ -2,6 +2,7 @@ import { BallType } from "../../stores/game/ball";
 import { CardType } from "../../stores/game/card";
 
 export type CardProps = {
+  card_id: number;
   pokemon_no: number;
   card_type: CardType;
   required_master_ball_cnt: number;
@@ -16,4 +17,6 @@ export type CardProps = {
   evolution_ball_type: BallType;
   evolution_ball_cnt: number;
   side: "Front" | "Back";
+  onClick?: () => void;
+  isSelected?: boolean;
 };

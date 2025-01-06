@@ -10,6 +10,7 @@ import Main from "./views/main";
 import Play from "./views/play";
 import { observer } from "mobx-react";
 import { BrowserRouter, Route, Routes } from "react-router";
+import PlayerStat from "./views/playerStat";
 
 const App = () => {
   const { view, moderators } = useStores();
@@ -23,9 +24,11 @@ const App = () => {
               <Main />
             ) : (
               <>
-                {moderators.map((moderator: IModerator, idx: number) => (
-                  <Play key={idx} playerIdx={idx} />
-                ))}
+                {moderators
+                  .getAll()
+                  .map((moderator: IModerator, idx: number) => (
+                    <Play key={idx} playerIdx={idx} />
+                  ))}
               </>
             )
           }
@@ -42,6 +45,7 @@ const App = () => {
             </Frame>
           }
         />
+        <Route path="/player-stat" element={<PlayerStat />} />
       </Routes>
     </BrowserRouter>
   );

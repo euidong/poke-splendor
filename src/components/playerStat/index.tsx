@@ -4,9 +4,12 @@ import BallCollection, { BallCollectionProps } from "../ballCollection";
 import Character from "../../chracter";
 import { CharacterType } from "../../stores/game/character";
 import Card, { cardObjectToCardProps } from "../card";
+import useStores from "../../hooks/useStores";
+import { observer } from "mobx-react";
 
 type PlayerStatProps =
   | {
+      isMe: boolean;
       characterName: CharacterType;
       capturedCards: ICard[];
       reservedCards: ICard[];
@@ -15,6 +18,7 @@ type PlayerStatProps =
     } & BallCollectionProps;
 
 const PlayerStat = ({
+  isMe,
   characterName,
   capturedCards,
   reservedCards,
@@ -22,6 +26,10 @@ const PlayerStat = ({
   score,
   ...balls
 }: PlayerStatProps) => {
+  const stores = useStores();
+  const isTgtSelectionMode = stores.controller.isPlayerStatTgtInSelectionMode;
+  const isSrcSelectionMode = stores.controller.isPlayerStatSrcInSelectionMode;
+
   return (
     <div className={styles["player_stat"]}>
       <div className={styles["player_stat__profile"]}>
@@ -41,22 +49,52 @@ const PlayerStat = ({
       <div className={styles["player_stat__ball_list"]}>
         <BallCollection {...balls} />
       </div>
-      {capturedCards.length > 0 && (
+      <div className={styles["player_stat__list_title"]}>Captured Cards</div>
+      {capturedCards.length > 0 ? (
         <div className={styles["player_stat__card_list"]}>
           {capturedCards.map((card) => (
-            <Card {...cardObjectToCardProps(card, "Front")} />
+            <Card
+              {...cardObjectToCardProps(card, "Front")}
+              isSelected={stores.input.selectedSrcPokeCardNo === card.id}
+              onClick={
+                isMe && isSrcSelectionMode
+                  ? () =>
+                      (stores.input.selectedSrcPokeCardNo =
+                        stores.input.selectedSrcPokeCardNo === card.id
+                          ? null
+                          : card.id)
+                  : undefined
+              }
+            />
           ))}
         </div>
+      ) : (
+        <div className={styles["player_stat__card_empty"]}>Empty</div>
       )}
-      {reservedCards.length > 0 && (
+      <div className={styles["player_stat__list_title"]}>Reserved Cards</div>
+      {reservedCards.length > 0 ? (
         <div className={styles["player_stat__card_list"]}>
           {reservedCards.map((card) => (
-            <Card {...cardObjectToCardProps(card, "Front")} />
+            <Card
+              {...cardObjectToCardProps(card, "Front")}
+              isSelected={stores.input.selectedTgtPokeCardNo === card.id}
+              onClick={
+                isMe && isTgtSelectionMode
+                  ? () =>
+                      (stores.input.selectedTgtPokeCardNo =
+                        stores.input.selectedTgtPokeCardNo === card.id
+                          ? null
+                          : card.id)
+                  : undefined
+              }
+            />
           ))}
         </div>
+      ) : (
+        <div className={styles["player_stat__card_empty"]}>Empty</div>
       )}
     </div>
   );
 };
 
-export default PlayerStat;
+export default observer(PlayerStat);

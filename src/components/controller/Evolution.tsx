@@ -1,16 +1,35 @@
+import { useEffect } from "react";
+import useStores from "../../hooks/useStores";
 import styles from "./Controller.module.scss";
 
 type EvolutionProps = {
   reset: () => void;
-  moveBack: () => void;
   onFinish?: () => void;
+  onEvolution?: () => void;
 };
 
-const Evolution = ({ reset, moveBack, onFinish }: EvolutionProps) => {
+const Evolution = ({ reset, onFinish, onEvolution }: EvolutionProps) => {
+  const stores = useStores();
+  useEffect(() => {
+    stores.input.selectedTgtPokeCardNo = null;
+    stores.controller.isBoardInSelectionMode = true;
+    stores.controller.isPlayerStatTgtInSelectionMode = true;
+    stores.controller.isPlayerStatSrcInSelectionMode = true;
+    return () => {
+      stores.controller.isBoardInSelectionMode = false;
+      stores.controller.isPlayerStatTgtInSelectionMode = false;
+      stores.controller.isPlayerStatSrcInSelectionMode = true;
+      stores.input.selectedTgtPokeCardNo = null;
+    }; // eslint-disable-next-line
+  }, []);
   return (
     <>
       <div className={styles["controller__body--evolution__title"]}>
         Evolution
+      </div>
+      <div className={styles["controller__body--evolution__description"]}>
+        You can choose a Pokémon card from the board and the your hands that
+        satisfies the number of balls your cards have.
       </div>
       <div className={styles["controller__body--evolution__content"]}>
         <div
@@ -24,9 +43,12 @@ const Evolution = ({ reset, moveBack, onFinish }: EvolutionProps) => {
                 "controller__body--evolution__content__button_list__button"
               ]
             }
-            onClick={() => moveBack()}
+            onClick={() => {
+              onFinish && onFinish();
+              reset();
+            }}
           >
-            Cancel
+            No
           </button>
           <button
             className={
@@ -35,6 +57,13 @@ const Evolution = ({ reset, moveBack, onFinish }: EvolutionProps) => {
               ]
             }
             onClick={() => {
+              stores.input.targetEvolvePokeCardId =
+                stores.input.selectedTgtPokeCardNo;
+              stores.input.sourceEvolvePokeCardId =
+                stores.input.selectedSrcPokeCardNo;
+              stores.input.selectedTgtPokeCardNo = null;
+              stores.input.selectedSrcPokeCardNo = null;
+              onEvolution && onEvolution();
               onFinish && onFinish();
               reset();
             }}

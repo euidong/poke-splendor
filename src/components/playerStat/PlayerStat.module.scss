@@ -37,16 +37,29 @@
     }
   }
   &__ball_list {
+    
     padding: 5px;
     display: flex;
   }
+  &__list_title {
+    display: flex;
+    padding-left: 5px;
+    padding-top: 3px;
+    border-top: 1px solid black;
+  }
   &__card_list {
     display: flex;
-    border-top: 1px solid black;
     flex-wrap: wrap;
     padding: 5px;
+    
     & > div {
-      margin: 5px;
+      margin: 1px;
     }
+  }
+  &__card_empty {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    color: #808080;
   }
 }

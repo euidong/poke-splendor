@@ -22,6 +22,8 @@ const CardFront = ({
   reward_ball_cnt,
   evolution_ball_type,
   evolution_ball_cnt,
+  isSelected,
+  onClick,
 }: Omit<CardProps, "side">) => {
   const nextEvolutionPokemonNo = pokeNoToNextEvolutionPokemonNo(pokemon_no);
   const pokemonName = pokeNoToName(pokemon_no);
@@ -33,10 +35,18 @@ const CardFront = ({
     required_great_ball_cnt,
     required_poke_ball_cnt
   );
+
   return (
     <div
       className={styles["card--front"]}
-      style={{ backgroundColor: ballTypeToColor(reward_ball_type, false) }}
+      style={{
+        backgroundColor: ballTypeToColor(reward_ball_type, false),
+        cursor: onClick ? "pointer" : "default",
+        outline: isSelected ? "2px solid red" : "none",
+      }}
+      onClick={() => {
+        if (onClick) onClick();
+      }}
     >
       <header
         className={styles["card--front__header"]}

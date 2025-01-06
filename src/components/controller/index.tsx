@@ -16,6 +16,10 @@ type ActionType =
 
 type ControllerProps = {
   onFinish?: () => void;
+  onCapture?: () => void;
+  onEvolution?: () => void;
+  onReservation?: () => void;
+  onBallSelection?: () => void;
 };
 
 const useAction = (initialAction: ActionType) => {
@@ -42,7 +46,13 @@ const useAction = (initialAction: ActionType) => {
   return { action, setAction, moveBack, reset };
 };
 
-const Controller = ({ onFinish }: ControllerProps) => {
+const Controller = ({
+  onFinish,
+  onCapture,
+  onEvolution,
+  onReservation,
+  onBallSelection,
+}: ControllerProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const { action, setAction, moveBack, reset } = useAction("ActionSelection");
@@ -63,16 +73,28 @@ const Controller = ({ onFinish }: ControllerProps) => {
             <ActionSelection setAction={setAction} />
           )}
           {action === "BallSelection" && (
-            <BallSelection setAction={setAction} moveBack={moveBack} />
+            <BallSelection
+              setAction={setAction}
+              moveBack={moveBack}
+              onBallSelection={onBallSelection}
+            />
           )}
           {action === "Capturing" && (
-            <Capturing setAction={setAction} moveBack={moveBack} />
+            <Capturing
+              setAction={setAction}
+              moveBack={moveBack}
+              onCapture={onCapture}
+            />
           )}
           {action === "Evolution" && (
-            <Evolution reset={reset} moveBack={moveBack} onFinish={onFinish} />
+            <Evolution
+              reset={reset}
+              onFinish={onFinish}
+              onEvolution={onEvolution}
+            />
           )}
           {action === "Reservation" && (
-            <Reservation moveBack={moveBack} setAction={setAction} />
+            <Reservation setAction={setAction} onReservation={onReservation} />
           )}
         </section>
       )}

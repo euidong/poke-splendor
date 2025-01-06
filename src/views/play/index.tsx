@@ -8,7 +8,8 @@ import PlayerStat from "../../components/playerStat";
 import Controller from "../../components/controller";
 import useStores from "../../hooks/useStores";
 import Frame from "../../components/Frame";
-import { IModerator } from "../../stores/game/moderator";
+import { IModerator, PublishInput } from "../../stores/game/moderator";
+import { observer } from "mobx-react";
 
 type PlayProps = {
   playerIdx: number;
@@ -16,7 +17,7 @@ type PlayProps = {
 
 const Play = ({ playerIdx }: PlayProps) => {
   const stores = useStores();
-  const moderator: IModerator = stores.moderators[playerIdx];
+  const moderator: IModerator = stores.moderators.get(playerIdx);
   const game = moderator.game;
 
   return game.turn === moderator.myPlayerIdx ? (
@@ -30,8 +31,9 @@ const Play = ({ playerIdx }: PlayProps) => {
           />
         )}
         {game.boardCards && <Board boardCards={game.boardCards} />}
-        {game.players.map((player) => (
+        {game.players.map((player, idx) => (
           <PlayerStat
+            isMe={playerIdx === idx}
             characterName={player.character}
             capturedCards={player.capturedCards}
             reservedCards={player.resevedCards}
@@ -43,11 +45,69 @@ const Play = ({ playerIdx }: PlayProps) => {
           />
         ))}
       </div>
-      <Controller />
+      <Controller
+        onCapture={() => {
+          if (stores.input.targetCapturePokeCardId) {
+            const cpi: PublishInput<"CapturePokeCard"> = {
+              type: "CapturePokeCard",
+              data: {
+                cardId: stores.input.targetCapturePokeCardId,
+                costBallCollection: stores.input.ballCollectionForCapturing,
+              },
+            };
+            moderator.publish(cpi);
+          }
+        }}
+        onEvolution={() => {
+          if (
+            stores.input.targetEvolvePokeCardId &&
+            stores.input.sourceEvolvePokeCardId
+          ) {
+            const epi: PublishInput<"EvolvePokeCard"> = {
+              type: "EvolvePokeCard",
+              data: {
+                srcCardId: stores.input.sourceEvolvePokeCardId,
+                tgtCardId: stores.input.targetEvolvePokeCardId,
+              },
+            };
+            moderator.publish(epi);
+          }
+        }}
+        onReservation={() => {
+          if (stores.input.targetReservePokeCardId) {
+            const rpi: PublishInput<"ReservePokeCard"> = {
+              type: "ReservePokeCard",
+              data: {
+                cardId: stores.input.targetReservePokeCardId,
+              },
+            };
+            moderator.publish(rpi);
+          }
+        }}
+        onBallSelection={() => {
+          if (stores.input.ballCollectionForModifying) {
+            const bpi: PublishInput<"ModifyBallCollection"> = {
+              type: "ModifyBallCollection",
+              data: {
+                ballCollection: stores.input.ballCollectionForModifying,
+              },
+            };
+            moderator.publish(bpi);
+          }
+        }}
+        onFinish={() => {
+          stores.input.clear();
+          // const fpi: PublishInput<"FinishTurn"> = {
+          //   type: "FinishTurn",
+          //   data: {},
+          // };
+          // moderator.publish(fpi);
+        }}
+      />
     </Frame>
   ) : (
     <></>
   );
 };
 
-export default Play;
+export default observer(Play);

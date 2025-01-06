@@ -11,7 +11,7 @@ interface IPlayer {
   usedByEvolutionCards: ICard[];
   // caculation
   getScore: () => number;
-  getDiscountBalls: () => BallCollection;
+  getDiscountBallCollection: () => BallCollection;
   getEvolutionCnt: () => number;
 }
 
@@ -45,7 +45,7 @@ class Player implements IPlayer {
     return score;
   };
 
-  getDiscountBalls = () => {
+  getDiscountBallCollection = () => {
     const bc = new BallCollection({
       masterball: 0,
       ultraball: 0,

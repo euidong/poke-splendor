@@ -16,9 +16,8 @@ const Main = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            const { game, moderators } = startLocalGame(numPlayers);
-            stores.moderators = moderators;
-            stores.game = game;
+            const { lms } = startLocalGame(numPlayers);
+            stores.moderators = lms;
             stores.view.set(stores.view.name === "main" ? "play" : "main");
           }}
           className={styles["main__form"]}

@@ -18,6 +18,9 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
   - [ ] Implement Onboarding UI
   - [ ] Select Font, size, etc.
 - [ ] Local Game setup
+  - [x] Implement Controller logic
+  - [ ] Implement Finalization of Game
+  - [ ] Fix Capture detail logic
 - [ ] WebRTC setup
   - [ ] Select STUN Server
   - [ ] Implement WebRTC Moderator
