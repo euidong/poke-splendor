@@ -9,7 +9,7 @@ const initialNumPlayers = 4;
 const Main = () => {
   const stores = useStores();
 
-  const [numPlayers, setNumPlayers] = useState(initialNumPlayers);
+  const [numPlayers, setNumPlayers] = useState<2 | 3 | 4>(initialNumPlayers);
   return (
     <Frame debug={true}>
       <div className={styles["main"]}>
@@ -32,7 +32,12 @@ const Main = () => {
               min={2}
               max={4}
               defaultValue={initialNumPlayers}
-              onChange={(e) => setNumPlayers(Number(e.currentTarget.value))}
+              onChange={(e) => {
+                const value = Number(e.currentTarget.value);
+                if (value === 2 || value === 3 || value === 4) {
+                  setNumPlayers(value);
+                }
+              }}
             />
           </div>
           <button

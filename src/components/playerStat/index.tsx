@@ -55,12 +55,12 @@ const PlayerStat = ({
           {capturedCards.map((card) => (
             <Card
               {...cardObjectToCardProps(card, "Front")}
-              isSelected={stores.input.selectedSrcPokeCardNo === card.id}
+              isSelected={stores.controller.selectedSrcPokeCardId === card.id}
               onClick={
                 isMe && isSrcSelectionMode
                   ? () =>
-                      (stores.input.selectedSrcPokeCardNo =
-                        stores.input.selectedSrcPokeCardNo === card.id
+                      (stores.controller.selectedSrcPokeCardId =
+                        stores.controller.selectedSrcPokeCardId === card.id
                           ? null
                           : card.id)
                   : undefined
@@ -77,12 +77,12 @@ const PlayerStat = ({
           {reservedCards.map((card) => (
             <Card
               {...cardObjectToCardProps(card, "Front")}
-              isSelected={stores.input.selectedTgtPokeCardNo === card.id}
+              isSelected={stores.controller.selectedTgtPokeCardId === card.id}
               onClick={
                 isMe && isTgtSelectionMode
                   ? () =>
-                      (stores.input.selectedTgtPokeCardNo =
-                        stores.input.selectedTgtPokeCardNo === card.id
+                      (stores.controller.selectedTgtPokeCardId =
+                        stores.controller.selectedTgtPokeCardId === card.id
                           ? null
                           : card.id)
                   : undefined

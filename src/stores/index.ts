@@ -5,7 +5,6 @@ import View from "./view";
 
 const stores = {
   view: new View(),
-  game: undefined,
   moderators: new LocalModerators(),
   input: new Input(),
   controller: new Controller(),

@@ -12,11 +12,11 @@ type ReservationProps = {
 const Reservation = ({ setAction, onReservation }: ReservationProps) => {
   const stores = useStores();
   useEffect(() => {
-    stores.input.selectedTgtPokeCardNo = null;
+    stores.controller.selectedTgtPokeCardId = null;
     stores.controller.isBoardInSelectionMode = true;
     return () => {
       stores.controller.isBoardInSelectionMode = false;
-      stores.input.selectedTgtPokeCardNo = null;
+      stores.controller.selectedTgtPokeCardId = null;
     }; // eslint-disable-next-line
   }, []);
   return (
@@ -50,11 +50,11 @@ const Reservation = ({ setAction, onReservation }: ReservationProps) => {
                 "controller__body--reservation__content__button_list__button"
               ]
             }
-            disabled={stores.input.selectedTgtPokeCardNo === null}
+            disabled={stores.controller.selectedTgtPokeCardId === null}
             onClick={() => {
               stores.input.targetReservePokeCardId =
-                stores.input.selectedTgtPokeCardNo;
-              stores.input.selectedTgtPokeCardNo = null;
+                stores.controller.selectedTgtPokeCardId;
+              stores.controller.selectedTgtPokeCardId = null;
               onReservation && onReservation();
               setAction("Evolution");
             }}

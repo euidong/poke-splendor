@@ -16,13 +16,13 @@ type CapturingProps = {
 const Capturing = ({ setAction, moveBack, onCapture }: CapturingProps) => {
   const stores = useStores();
   useEffect(() => {
-    stores.input.selectedTgtPokeCardNo = null;
+    stores.controller.selectedTgtPokeCardId = null;
     stores.controller.isBoardInSelectionMode = true;
     stores.controller.isPlayerStatTgtInSelectionMode = true;
     return () => {
       stores.controller.isBoardInSelectionMode = false;
       stores.controller.isPlayerStatTgtInSelectionMode = false;
-      stores.input.selectedTgtPokeCardNo = null;
+      stores.controller.selectedTgtPokeCardId = null;
     }; // eslint-disable-next-line
   }, []);
 
@@ -43,12 +43,12 @@ const Capturing = ({ setAction, moveBack, onCapture }: CapturingProps) => {
         Capturing
       </div>
       <div className={styles["controller__body--capturing__description"]}>
-        {stores.input.selectedTgtPokeCardNo
+        {stores.controller.selectedTgtPokeCardId
           ? "Now, you must decide which ball to capture that Pokémon."
           : "You can choose a Pokémon card from the board and the your hands that satisfies the number of balls you have."}
       </div>
       <div className={styles["controller__body--capturing__content"]}>
-        {stores.input.selectedTgtPokeCardNo && (
+        {stores.controller.selectedTgtPokeCardId && (
           <div
             className={
               styles["controller__body--capturing__content__ball_list"]
@@ -87,11 +87,11 @@ const Capturing = ({ setAction, moveBack, onCapture }: CapturingProps) => {
                 "controller__body--capturing__content__button_list__button"
               ]
             }
-            disabled={!!!stores.input.selectedTgtPokeCardNo}
+            disabled={!!!stores.controller.selectedTgtPokeCardId}
             onClick={() => {
               stores.input.targetCapturePokeCardId =
-                stores.input.selectedTgtPokeCardNo;
-              stores.input.selectedTgtPokeCardNo = null;
+                stores.controller.selectedTgtPokeCardId;
+              stores.controller.selectedTgtPokeCardId = null;
               const ballCollection: { [key in BallType]: number } = {
                 masterball: Number(
                   ballCollectionRefs.masterball.current?.value || 0

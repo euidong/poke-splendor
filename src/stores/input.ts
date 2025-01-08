@@ -3,9 +3,6 @@ import { BallCollection } from "./game/ballCollection";
 import { Nullable } from "../types";
 
 class Input {
-  selectedTgtPokeCardNo: Nullable<number> = null;
-  selectedSrcPokeCardNo: Nullable<number> = null;
-
   // For ModifyBallCollection
   ballCollectionForModifying: Nullable<BallCollection> = null;
 
@@ -25,9 +22,6 @@ class Input {
   }
 
   clear() {
-    this.selectedTgtPokeCardNo = null;
-    this.selectedSrcPokeCardNo = null;
-
     this.ballCollectionForModifying = null;
 
     this.targetCapturePokeCardId = null;

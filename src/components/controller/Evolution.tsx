@@ -11,7 +11,7 @@ type EvolutionProps = {
 const Evolution = ({ reset, onFinish, onEvolution }: EvolutionProps) => {
   const stores = useStores();
   useEffect(() => {
-    stores.input.selectedTgtPokeCardNo = null;
+    stores.controller.selectedTgtPokeCardId = null;
     stores.controller.isBoardInSelectionMode = true;
     stores.controller.isPlayerStatTgtInSelectionMode = true;
     stores.controller.isPlayerStatSrcInSelectionMode = true;
@@ -19,7 +19,7 @@ const Evolution = ({ reset, onFinish, onEvolution }: EvolutionProps) => {
       stores.controller.isBoardInSelectionMode = false;
       stores.controller.isPlayerStatTgtInSelectionMode = false;
       stores.controller.isPlayerStatSrcInSelectionMode = true;
-      stores.input.selectedTgtPokeCardNo = null;
+      stores.controller.selectedTgtPokeCardId = null;
     }; // eslint-disable-next-line
   }, []);
   return (
@@ -58,11 +58,11 @@ const Evolution = ({ reset, onFinish, onEvolution }: EvolutionProps) => {
             }
             onClick={() => {
               stores.input.targetEvolvePokeCardId =
-                stores.input.selectedTgtPokeCardNo;
+                stores.controller.selectedTgtPokeCardId;
               stores.input.sourceEvolvePokeCardId =
-                stores.input.selectedSrcPokeCardNo;
-              stores.input.selectedTgtPokeCardNo = null;
-              stores.input.selectedSrcPokeCardNo = null;
+                stores.controller.selectedSrcPokeCardId;
+              stores.controller.selectedTgtPokeCardId = null;
+              stores.controller.selectedSrcPokeCardId = null;
               onEvolution && onEvolution();
               onFinish && onFinish();
               reset();

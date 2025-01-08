@@ -5,28 +5,33 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "mobx-react";
 import stores from "./stores";
+import { loadConsts } from "./stores/const";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const initReact = () => {
+  const root = ReactDOM.createRoot(
+    document.getElementById("root") as HTMLElement
+  );
 
-root.render(
-  <React.StrictMode>
-    <Provider {...stores}>
-      <App />
-    </Provider>
-  </React.StrictMode>
-);
+  root.render(
+    <React.StrictMode>
+      <Provider {...stores}>
+        <App />
+      </Provider>
+    </React.StrictMode>
+  );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  // If you want to start measuring performance in your app, pass a function
+  // to log results (for example: reportWebVitals(console.log))
+  // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+  reportWebVitals();
 
-// demontrating MobX
-if (
-  !new (class {
-    x: any;
-  })().hasOwnProperty("x")
-)
-  throw new Error("Transpiler is not configured correctly");
+  // demontrating MobX
+  if (
+    !new (class {
+      x: any;
+    })().hasOwnProperty("x")
+  )
+    throw new Error("Transpiler is not configured correctly");
+};
+
+loadConsts(false, initReact);

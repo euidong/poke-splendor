@@ -1,14 +1,19 @@
 import { makeAutoObservable } from "mobx";
 
-import { cards } from "../const";
+import {
+  cards,
+  desiredInitialBoardBallCollectionsPerPlayerNums,
+  desiredOpenCardNumInBoard,
+  emptyBallCollection,
+} from "../const";
 import { shuffle } from "../../utils";
 import { CardType, BoardCard, Card } from "./card";
 import { Player, IPlayer } from "./player";
 import { BallCollection, IBallCollection } from "./ballCollection";
-import { BallTypes } from "./ball";
 
+// TODO: erase every `console.error` line.
 class Game {
-  numPlayers?: number = undefined;
+  numPlayers?: 2 | 3 | 4 = undefined;
   boardBallCollection?: BallCollection = undefined;
   boardCards?: BoardCard[] = undefined;
   round?: number = undefined;
@@ -19,44 +24,55 @@ class Game {
     makeAutoObservable(this);
   }
 
-  init(numPlayers: number) {
+  init(numPlayers: 2 | 3 | 4) {
     this.numPlayers = numPlayers;
     if (
       this.numPlayers === undefined ||
       this.numPlayers < 2 ||
       this.numPlayers > 4
-    )
-      return Error(`Number of Players is wrong (numPlayers: {this.numPlayers}`);
-    this.initBoard(this.numPlayers);
+    ) {
+      const err = Error(
+        `Number of Players is wrong (numPlayers: {this.numPlayers}`
+      );
+      console.error(err);
+      return err;
+    }
+    let err = this.initBoard(this.numPlayers);
+    if (err) {
+      return err;
+    }
+    this.players = [];
     for (let i = 0; i < this.numPlayers; ++i) {
-      this.initPlayer(i);
+      this.initPlayer(i as 0 | 1 | 2 | 3);
     }
     this.round = 1;
     this.turn = 0;
+    return null;
   }
 
-  initPlayer(id: number) {
+  initPlayer(id: 0 | 1 | 2 | 3) {
     this.players.push(new Player(id));
+    return null;
   }
 
-  initBoard(numPlayers: number) {
-    const ballNumbers = [4, 5, 7];
-    this.boardBallCollection = new BallCollection({
-      masterball: 5,
-      ultraball: ballNumbers[numPlayers - 2],
-      quickball: ballNumbers[numPlayers - 2],
-      healball: ballNumbers[numPlayers - 2],
-      greatball: ballNumbers[numPlayers - 2],
-      pokeball: ballNumbers[numPlayers - 2],
-    });
+  initBoard(numPlayers: 2 | 3 | 4) {
+    this.boardBallCollection =
+      desiredInitialBoardBallCollectionsPerPlayerNums[numPlayers].deepCopy();
 
     this.boardCards = Object.values(cards).map((card) => ({
       ...card,
       open: false,
     }));
 
-    this.shuffleBoardCards();
-    this.openBoardCards();
+    let err = this.shuffleBoardCards();
+    if (err) {
+      return err;
+    }
+    err = this.openBoardCards();
+    if (err) {
+      return err;
+    }
+    return null;
   }
 
   nextTurn() {
@@ -74,113 +90,175 @@ class Game {
     if (this.turn === 0) this.round++;
   }
 
-  // TODO: change not to touch balls object in ball collector.
   modifyBallCollection(playerIdx: number, reqBallCollection: BallCollection) {
-    const player = this.players[playerIdx];
+    // check minus
+    const bcFromBoard = new BallCollection({
+      masterball: Math.max(reqBallCollection.balls.masterball, 0),
+      pokeball: Math.max(reqBallCollection.balls.pokeball, 0),
+      greatball: Math.max(reqBallCollection.balls.greatball, 0),
+      ultraball: Math.max(reqBallCollection.balls.ultraball, 0),
+      quickball: Math.max(reqBallCollection.balls.quickball, 0),
+      healball: Math.max(reqBallCollection.balls.healball, 0),
+    });
+    const bcFromPlayer = new BallCollection({
+      masterball: Math.max(-reqBallCollection.balls.masterball, 0),
+      pokeball: Math.max(-reqBallCollection.balls.pokeball, 0),
+      greatball: Math.max(-reqBallCollection.balls.greatball, 0),
+      ultraball: Math.max(-reqBallCollection.balls.ultraball, 0),
+      quickball: Math.max(-reqBallCollection.balls.quickball, 0),
+      healball: Math.max(-reqBallCollection.balls.healball, 0),
+    });
 
-    // [copy player ball collection]
-    const nbc = player.ballCollection.deepCopy();
+    const originState = {
+      board: this.boardBallCollection?.deepCopy(),
+      player: this.players[playerIdx].ballCollection,
+    };
 
-    // [apply minus ball]
-    for (let key of BallTypes) {
-      if (reqBallCollection.balls[key] >= 0) continue;
-      if (nbc.balls[key] + reqBallCollection.balls[key] < 0) {
-        console.error(
-          "[Invalid Input] the number of requested removing ball is upper than own"
-        );
-        return false;
+    if (bcFromPlayer["!="](emptyBallCollection)) {
+      const err = this.sendBallCollection(playerIdx, bcFromPlayer, "Player");
+      if (err !== null) {
+        return err;
       }
-      nbc.balls[key] += reqBallCollection.balls[key];
-      reqBallCollection.balls[key] = 0;
     }
 
-    // [validation of requested ball collection]
-    // 1. if number of all balls > 3, raise Error
+    if (bcFromBoard["!="](emptyBallCollection)) {
+      const err = this.sendBallCollection(playerIdx, bcFromBoard, "Board");
+      if (err !== null) {
+        this.boardBallCollection = originState.board;
+        this.players[playerIdx].ballCollection = originState.player;
+        return err;
+      }
+    }
+
+    return null;
+  }
+
+  sendBallCollection(
+    playerIdx: number,
+    reqBallCollection: BallCollection,
+    sender: "Board" | "Player"
+  ) {
+    if (!!!this.boardBallCollection) {
+      return new Error(
+        "[Invalid Environment] BoardBallCollection isn't exist, You need to initialize game."
+      );
+    }
+    if (playerIdx < 0 || playerIdx >= this.players.length) {
+      return new Error(
+        `[Invalid Input] playerIdx must be in 0 ~ ${this.players.length}`
+      );
+    }
+    if (playerIdx !== this.turn) {
+      return new Error(
+        `[Invalid Input] this turn is ${this.turn}, but your player id is ${playerIdx}`
+      );
+    }
+    const player = this.players[playerIdx];
+
     const totBallCnt = Object.values(reqBallCollection.balls).reduce(
       (acc, cnt) => acc + cnt
     );
-    if (totBallCnt > 3) {
-      console.error("[Invalid Input] number of maximum total ball is 3");
-      return false;
-    }
-    // 2. if the number of balls of one type > 2, raise Error
     const maxBallCnt = Object.values(reqBallCollection.balls).reduce(
       (acc, cnt) => (acc < cnt ? cnt : acc)
     );
-    if (maxBallCnt > 2) {
-      console.error("[Invalid Input] number of maximum ball for a type is 2");
-      return false;
-    }
-    // 3. if the number of balls of one type = 2 and number of ball types (not 0) > 1, raise Error
-    if (maxBallCnt === 2 && totBallCnt > 2) {
-      console.error(
-        "[Invalid Input] if you choose 2 balls for a type, you can't choose another ball"
-      );
-      return false;
-    }
-    // 4. if the number of ball types > 3, raise Error
-    const ballTypeCnt = Object.values(reqBallCollection.balls).reduce(
-      (acc, cnt) => (cnt > 0 ? acc + 1 : acc)
+    const minBallCnt = Object.values(reqBallCollection.balls).reduce(
+      (acc, cnt) => (acc > cnt ? cnt : acc)
     );
-    if (ballTypeCnt > 3) {
-      console.error("[Invalid Input] number of maximum ball type is 3");
-      return false;
-    }
-    // 5. if the selected ball is "master ball", then tot number limited to 1.
-    if (reqBallCollection.balls.masterball > 0 && totBallCnt > 1) {
-      console.error(
-        "[Invalid Input] number of maximum total ball is 1 for master ball"
+    // minus ballCollection is restricted
+    if (minBallCnt < 0) {
+      return new Error(
+        `[Invalid Input] the number of each balls in reqBallCollection can not be minus`
       );
-      return false;
     }
-    // 6. after update, if the numbe of total ball number > 10, raise Error
-    const playerTotBallCnt = Object.values(nbc.balls).reduce(
-      (acc, cnt) => acc + cnt
-    );
-    if (playerTotBallCnt + totBallCnt > 10) {
-      console.error("[Invalid Input] number of maximum owned ball is 10");
-      return false;
-    }
-    // 7. if the boardBallCollection doesn't have enough balls for the request, raise Error
-    if (this.boardBallCollection === undefined) {
-      console.error(
-        "[Invalid Environment] BoardBallCollection isn't exist, You need to initialize game."
+
+    let srcBc: BallCollection, tgtBc: BallCollection;
+    if (sender === "Board") {
+      // the number of master ball must be 0 or 1
+      if (reqBallCollection.balls.masterball > 1) {
+        return new Error(
+          `[Invalid Input] the number of master ball must be 0 or 1`
+        );
+      }
+      // if the number of master ball is 1, then others must be 0
+      else if (reqBallCollection.balls.masterball === 1) {
+        if (totBallCnt !== 1) {
+          return new Error(
+            "[Invalid Input] the number of maximum total ball is 1, when you request master ball"
+          );
+        }
+      }
+      // if the number of master ball is 0
+      else {
+        if (totBallCnt > 3) {
+          return new Error(
+            "[Invalid Input] the sum of the number of ball is 3"
+          );
+        }
+        if (totBallCnt === 3 && maxBallCnt !== 1) {
+          return new Error(
+            "[Invalid Input] if you choose 3 balls, then you must choose a ball per ball type"
+          );
+        }
+      }
+      // the maximum total ball number of each player is 10
+      const playerBallCnt = Object.values(player.ballCollection.balls).reduce(
+        (acc, cnt) => acc + cnt
       );
-      return false;
+      if (totBallCnt + playerBallCnt > 10) {
+        return new Error(
+          "[Invalid Input] the maximum total ball number of each player is 10"
+        );
+      }
+      srcBc = this.boardBallCollection;
+      tgtBc = player.ballCollection;
+    } else if (sender === "Player") {
+      tgtBc = this.boardBallCollection;
+      srcBc = player.ballCollection;
+    } else {
+      return new Error("[Invalid Input] sender must be Board or Player");
     }
-    if (!this.boardBallCollection[">="](reqBallCollection)) {
-      console.error(
-        "[Invalid Input] boardBallCollection doesn't have enough balls for the request"
+
+    if (!srcBc[">="](reqBallCollection)) {
+      return new Error(
+        "[Invalid Input] sender must have more balls compared to request"
       );
-      return false;
     }
 
     // [update]
-    for (let key of BallTypes) {
-      nbc.balls[key] += reqBallCollection.balls[key];
+    if (sender === "Board") {
+      player.ballCollection = tgtBc["+"](reqBallCollection);
+      this.boardBallCollection = srcBc["-"](reqBallCollection);
+    } else if (sender === "Player") {
+      this.boardBallCollection = tgtBc["+"](reqBallCollection);
+      player.ballCollection = srcBc["-"](reqBallCollection);
     }
-
-    this.players[playerIdx].ballCollection = nbc;
-    this.boardBallCollection = this.boardBallCollection["-"](reqBallCollection);
-    return true;
+    return null;
   }
 
   reservePokemonCard(playerIdx: number, cardId: number) {
+    if (playerIdx < 0 || playerIdx >= this.players.length) {
+      return new Error(
+        `[Invalid Input] playerIdx must be in 0 ~ ${this.players.length}`
+      );
+    }
+    if (playerIdx !== this.turn) {
+      return new Error(
+        `[Invalid Input] this turn is ${this.turn}, but your player id is ${playerIdx}`
+      );
+    }
     const player = this.players[playerIdx];
 
     // [validate request]
     // 1. check whether boardCard exist
     if (this.boardCards === undefined) {
-      console.error(
+      return new Error(
         "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
       );
-      return false;
     }
     // 2. check whether card exist in game or not
     const card = cards[cardId];
     if (card === undefined) {
-      console.error(`[Invalid Input] card(${cardId}) isn't exist in game`);
-      return false;
+      return new Error(`[Invalid Input] card(${cardId}) isn't exist in game`);
     }
     // 3. check whether card exist in board or not
     let boardCard: BoardCard | undefined = undefined;
@@ -191,16 +269,19 @@ class Game {
       }
     }
     if (boardCard === undefined) {
-      console.error(`[Invalid Input] card(${cardId}) isn't exist in board`);
-      return false;
+      return new Error(`[Invalid Input] card(${cardId}) isn't exist in board`);
+    }
+    // 4. check whether card is opened or not
+    if (!boardCard.open) {
+      return new Error(`[Invalid Input] card(${cardId}) isn't open in board`);
     }
 
     // [update]
-    player.resevedCards.push(card);
+    player.resevedCards = [...player.resevedCards, card];
     this.boardCards = this.boardCards.filter((bc) => boardCard?.id !== bc.id);
     this.openBoardCards();
 
-    return true;
+    return null;
   }
 
   capturePokemonCard(
@@ -208,28 +289,35 @@ class Game {
     costBallCollection: IBallCollection,
     cardId: number
   ) {
+    if (playerIdx < 0 || playerIdx >= this.players.length) {
+      return new Error(
+        `[Invalid Input] playerIdx must be in 0 ~ ${this.players.length}`
+      );
+    }
+    if (playerIdx !== this.turn) {
+      return new Error(
+        `[Invalid Input] this turn is ${this.turn}, but your player id is ${playerIdx}`
+      );
+    }
     const player = this.players[playerIdx];
 
     // [validate request]
     // 1. check whether boardCard exist
     if (this.boardCards === undefined) {
-      console.error(
+      return new Error(
         "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
       );
-      return false;
     }
     // 2. check whether board ballcollection exist
     if (this.boardBallCollection === undefined) {
-      console.error(
+      return new Error(
         "[Invalid Environment] BoardBallCollection isn't exist, You need to initialize game."
       );
-      return false;
     }
     // 3. check whether card exist in game or not
     const card = cards[cardId];
     if (card === undefined) {
-      console.error(`[Invalid Input] card(${cardId}) isn't exist in game`);
-      return false;
+      return new Error(`[Invalid Input] card(${cardId}) isn't exist in game`);
     }
     // 4. check whether card exist in both of board or player hands, or not
     let boardCard: BoardCard | undefined = undefined;
@@ -247,119 +335,86 @@ class Game {
       }
     }
     if (boardCard === undefined && reservedCard === undefined) {
-      console.error(
+      return new Error(
         `[Invalid Input] card(${cardId}) isn't exist in board and player hands`
       );
-      return false;
+    }
+    if (boardCard !== undefined && !boardCard.open) {
+      return new Error(`[Invalid Input] card(${cardId}) isn't open`);
     }
     // 5. check whether player has costing balls sent as a param
     if (!player.ballCollection[">="](costBallCollection)) {
-      console.error(
+      return new Error(
         `[Invalid Input] player(${playerIdx})'s cost balls are invalid (not enough)`
       );
-      return false;
     }
 
     // 6. check whether player has enough balls for buying this card.
     const srcBallCollection = costBallCollection["+"](
       player.getDiscountBallCollection()
     );
-    const masterballCnt = srcBallCollection.balls.masterball;
+    const extraMasterballCnt = Math.max(
+      0,
+      srcBallCollection.balls.masterball -
+        card.neededBallsForCapturing.balls.masterball
+    );
     const remainBallCnt = Object.values(
       card.neededBallsForCapturing["-"](srcBallCollection).balls
     ).reduce((acc, value) => acc + value);
 
-    // TODO: select validation way.
-    // if we use "!==", then check correction,
-    // if we use "<", then check sufficiency.
-    if (masterballCnt !== remainBallCnt) {
-      console.error(
-        `[Invalid Input] player(${playerIdx})'s ball isn't match to buy card(${cardId})`
+    if (extraMasterballCnt < remainBallCnt) {
+      return new Error(
+        `[Invalid Input] inputed cost ball(${costBallCollection.balls}) isn't enough to buy card(${cardId})`
       );
-      return false;
     }
 
     // [update]
-    player.ballCollection = player.ballCollection["-"](costBallCollection);
-    this.boardBallCollection =
-      this.boardBallCollection["+"](costBallCollection);
-    player.capturedCards.push(card);
+    const err = this.sendBallCollection(
+      playerIdx,
+      costBallCollection,
+      "Player"
+    );
+    if (err !== null) {
+      return err;
+    }
 
+    player.capturedCards = [...player.capturedCards, card];
     this.boardCards = this.boardCards.filter((bc) => card.id !== bc.id);
     this.openBoardCards();
     player.resevedCards = player.resevedCards.filter((rc) => card.id !== rc.id);
 
-    return true;
-  }
-
-  shuffleBoardCards() {
-    if (this.boardCards === undefined) {
-      console.error(
-        "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
-      );
-      return false;
-    }
-    this.boardCards = shuffle(this.boardCards);
-    return true;
-  }
-
-  openBoardCards() {
-    if (this.boardCards === undefined) {
-      console.error(
-        "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
-      );
-      return false;
-    }
-    const desiredOpen: { [key in CardType]: number } = {
-      Tier1: 4,
-      Tier2: 4,
-      Tier3: 4,
-      Rare: 1,
-      Legendary: 1,
-    };
-    const curOpen: { [key in CardType]: number } = {
-      Tier1: 0,
-      Tier2: 0,
-      Tier3: 0,
-      Rare: 0,
-      Legendary: 0,
-    };
-    this.boardCards.forEach((boardCard) => {
-      if (boardCard.open) {
-        curOpen[boardCard.type]++;
-      }
-    });
-    this.boardCards.forEach((boardCard) => {
-      const type = boardCard.type;
-      const isOpen = boardCard.open;
-      if (!isOpen && curOpen[type] < desiredOpen[type]) {
-        curOpen[type]++;
-        boardCard.open = true;
-      }
-    });
-    return true;
+    return null;
   }
 
   evolvePokemonCard(playerIdx: number, srcCardId: number, tgtCardId: number) {
+    if (playerIdx < 0 || playerIdx >= this.players.length) {
+      return new Error(
+        `[Invalid Input] playerIdx must be in 0 ~ ${this.players.length}`
+      );
+    }
+    if (playerIdx !== this.turn) {
+      return new Error(
+        `[Invalid Input] this turn is ${this.turn}, but your player id is ${playerIdx}`
+      );
+    }
+
     const player = this.players[playerIdx];
 
     // [validation]
 
     // 1. check whether boardCard exist
     if (this.boardCards === undefined) {
-      console.error(
+      return new Error(
         "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
       );
-      return false;
     }
 
     // 2. check whether source card exist
     const srcCard = cards[srcCardId];
     if (srcCard === undefined) {
-      console.error(
+      return new Error(
         `[Invalid Input] source card(${srcCardId}) isn't exist in game`
       );
-      return false;
     }
 
     let isSrcInPlayerHand = false;
@@ -371,19 +426,17 @@ class Game {
     }
 
     if (!isSrcInPlayerHand) {
-      console.error(
+      return new Error(
         `[Invalid Input] Source Pokemon card(${srcCardId}) isn't exist`
       );
-      return false;
     }
 
     // 3. check whether target card exist
     const tgtCard = cards[tgtCardId];
     if (tgtCard === undefined) {
-      console.error(
+      return new Error(
         `[Invalid Input] target card(${tgtCardId}) isn't exist in game`
       );
-      return false;
     }
 
     let isTgtInBoard = false;
@@ -403,27 +456,45 @@ class Game {
     }
 
     if (!isTgtInBoard && !isTgtInPlayerHand) {
-      console.error(
+      return new Error(
         `[Invalid Input] Target Pokemon card(${tgtCardId}) isn't exist`
       );
-      return false;
     }
 
     if (isTgtInBoard && isTgtInPlayerHand) {
-      console.error(
+      return new Error(
         `[Invalid Input] Target Pokemon card(${tgtCardId}) is exist both(board, player hand)`
       );
-      return false;
     }
 
-    // 4. check whether player has enough balls for evolving this card.
+    for (let bc of this.boardCards) {
+      if (bc.id === tgtCardId) {
+        if (!bc.open) {
+          return new Error(
+            `[Invalid Input] Target Pokemon card(${tgtCardId}) is not open`
+          );
+        }
+        break;
+      }
+    }
+
+    // 4. check whether tgtCard is next evolution of the srcCard
+    if (
+      cards[srcCardId].pokemon.next_evolution?.no !==
+      cards[tgtCardId].pokemon.no
+    ) {
+      return new Error(
+        `[Invalid Input] Target Pokemon card(${tgtCardId}) is not the next evolution of the source pokemon card(${srcCardId})`
+      );
+    }
+
+    // 5. check whether player has enough balls for evolving this card.
     if (
       !player.getDiscountBallCollection()[">="](srcCard.neededBallsForEvolution)
     ) {
-      console.error(
+      return new Error(
         `[Invalid Input] player(${playerIdx})'s ball isn't enough to evolve to target card(${tgtCardId})`
       );
-      return false;
     }
 
     // [update]
@@ -436,9 +507,9 @@ class Game {
       player.capturedCards = player.capturedCards.filter(
         (card) => card.id !== srcCardId
       );
-      player.usedByEvolutionCards.push(srcCard);
+      player.usedByEvolutionCards = [...player.usedByEvolutionCards, srcCard];
 
-      player.capturedCards.push(tgtCard);
+      player.capturedCards = [...player.capturedCards, tgtCard];
 
       this.boardCards = this.boardCards.filter((bc) => bc.id !== tgtCardId);
 
@@ -452,15 +523,64 @@ class Game {
       player.capturedCards = player.capturedCards.filter(
         (card) => card.id !== srcCardId
       );
-      player.usedByEvolutionCards.push(srcCard);
+      player.usedByEvolutionCards = [...player.usedByEvolutionCards, srcCard];
 
-      player.capturedCards.push(tgtCard);
+      player.capturedCards = [...player.capturedCards, tgtCard];
 
       player.resevedCards = player.resevedCards.filter(
         (card) => card.id !== tgtCardId
       );
     }
-    return true;
+    return null;
+  }
+
+  shuffleBoardCards() {
+    if (this.boardCards === undefined) {
+      const err = new Error(
+        "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
+      );
+      console.error(err);
+      return err;
+    }
+    this.boardCards = shuffle(this.boardCards);
+    return null;
+  }
+
+  openBoardCards() {
+    if (this.boardCards === undefined) {
+      const err = new Error(
+        "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
+      );
+      console.error(err);
+      return err;
+    }
+
+    const curOpenCardNumInBoard: { [key in CardType]: number } = {
+      Tier1: 0,
+      Tier2: 0,
+      Tier3: 0,
+      Rare: 0,
+      Legendary: 0,
+    };
+    this.boardCards.forEach((boardCard) => {
+      if (boardCard.open) {
+        curOpenCardNumInBoard[boardCard.type]++;
+      }
+    });
+
+    this.boardCards.forEach((boardCard) => {
+      const type = boardCard.type;
+      const isOpen = boardCard.open;
+      if (
+        !isOpen &&
+        curOpenCardNumInBoard[type] < desiredOpenCardNumInBoard[type]
+      ) {
+        curOpenCardNumInBoard[type]++;
+        boardCard.open = true;
+      }
+    });
+
+    return null;
   }
 }
 

@@ -34,7 +34,7 @@ class LocalModerator implements IModerator {
   myPlayerIdx: number;
   centralPlayerIdx: number;
 
-  init = (numPlayers: number) => {
+  init = (numPlayers: 2 | 3 | 4) => {
     this.game.init(numPlayers);
     this.publish({ type: "UpdateResult", data: { game: this.game } });
     return null;
@@ -225,7 +225,7 @@ type ActionEvents = {
   [K in ActionEventType]: ActionEvent<K>;
 }[ActionEventType];
 
-const startLocalGame = (numPlayers: number) => {
+const startLocalGame = (numPlayers: 2 | 3 | 4) => {
   const game = new Game();
   const moderators = [];
   for (let i = 0; i < numPlayers; i++) {

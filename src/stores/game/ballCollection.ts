@@ -4,6 +4,7 @@ interface IBallCollection {
   balls: { [key in BallType]: number };
   isSame: (ballCollection: IBallCollection) => boolean;
   deepCopy: () => IBallCollection;
+  hasMinus: () => boolean;
 
   "+": (bc: IBallCollection) => IBallCollection;
   "-": (bc: IBallCollection) => IBallCollection;
@@ -26,6 +27,13 @@ class BallCollection implements IBallCollection {
 
   isSame = (bc: IBallCollection) => {
     return this["=="](bc);
+  };
+
+  hasMinus = () => {
+    BallTypes.forEach((ballType) => {
+      if (this.balls[ballType] < 0) return true;
+    });
+    return false;
   };
 
   deepCopy = () => {
@@ -81,11 +89,11 @@ class BallCollection implements IBallCollection {
 
   "!=" = (bc: IBallCollection) => {
     for (let ballType of BallTypes) {
-      if (this.balls[ballType] === bc.balls[ballType]) {
-        return false;
+      if (this.balls[ballType] !== bc.balls[ballType]) {
+        return true;
       }
     }
-    return true;
+    return false;
   };
 
   ">=" = (bc: IBallCollection) => {

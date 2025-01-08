@@ -70,6 +70,7 @@ const Play = ({ playerIdx }: PlayProps) => {
                 tgtCardId: stores.input.targetEvolvePokeCardId,
               },
             };
+            debugger;
             moderator.publish(epi);
           }
         }}
@@ -97,11 +98,11 @@ const Play = ({ playerIdx }: PlayProps) => {
         }}
         onFinish={() => {
           stores.input.clear();
-          // const fpi: PublishInput<"FinishTurn"> = {
-          //   type: "FinishTurn",
-          //   data: {},
-          // };
-          // moderator.publish(fpi);
+          const fpi: PublishInput<"FinishTurn"> = {
+            type: "FinishTurn",
+            data: {},
+          };
+          moderator.publish(fpi);
         }}
       />
     </Frame>

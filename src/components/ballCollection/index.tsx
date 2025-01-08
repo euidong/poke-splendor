@@ -28,14 +28,8 @@ const BallCollection = (props: BallCollectionProps) => {
                 className={styles["ball_collection__ball__cnt__input"]}
                 ref={props.refs[ballType]}
                 defaultValue={props[ballType]}
-                onChange={(e) => {
-                  e.target.value = Math.min(
-                    9,
-                    Math.max(0, parseInt(e.target.value))
-                  ).toString();
-                }}
                 max={9}
-                min={0}
+                min={-9}
                 type="number"
               />
             )}

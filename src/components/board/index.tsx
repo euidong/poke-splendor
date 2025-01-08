@@ -22,12 +22,15 @@ const Board = ({ boardCards }: BoardProps) => {
                 return (
                   <Card
                     {...cardObjectToCardProps(card, "Front")}
-                    isSelected={stores.input.selectedTgtPokeCardNo === card.id}
+                    isSelected={
+                      stores.controller.selectedTgtPokeCardId === card.id
+                    }
                     onClick={
                       isSelectionMode
                         ? () =>
-                            (stores.input.selectedTgtPokeCardNo =
-                              stores.input.selectedTgtPokeCardNo === card.id
+                            (stores.controller.selectedTgtPokeCardId =
+                              stores.controller.selectedTgtPokeCardId ===
+                              card.id
                                 ? null
                                 : card.id)
                         : undefined
@@ -49,12 +52,12 @@ const Board = ({ boardCards }: BoardProps) => {
             return (
               <Card
                 {...cardObjectToCardProps(card, "Front")}
-                isSelected={stores.input.selectedTgtPokeCardNo === card.id}
+                isSelected={stores.controller.selectedTgtPokeCardId === card.id}
                 onClick={
                   isSelectionMode
                     ? () =>
-                        (stores.input.selectedTgtPokeCardNo =
-                          stores.input.selectedTgtPokeCardNo === card.id
+                        (stores.controller.selectedTgtPokeCardId =
+                          stores.controller.selectedTgtPokeCardId === card.id
                             ? null
                             : card.id)
                     : undefined

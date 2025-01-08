@@ -1,7 +1,7 @@
 import { IBallCollection, BallCollection } from "./ballCollection";
 import { CharacterType, CharacterTypes } from "./character";
-import { BallType } from "./ball";
 import { ICard } from "./card";
+import { makeAutoObservable } from "mobx";
 
 interface IPlayer {
   character: CharacterType;
@@ -22,8 +22,8 @@ class Player implements IPlayer {
   ballCollection: IBallCollection;
   usedByEvolutionCards: ICard[];
 
-  constructor(id: number) {
-    this.character = CharacterTypes[id]; // TODO: id가 0~3 사이라고 가정. 후에 Random 적용도 고려
+  constructor(id: 0 | 1 | 2 | 3) {
+    this.character = CharacterTypes[id]; // TODO: 후에 Random 적용도 고려
     this.capturedCards = [];
     this.resevedCards = [];
     this.ballCollection = new BallCollection({
@@ -35,6 +35,7 @@ class Player implements IPlayer {
       masterball: 0,
     });
     this.usedByEvolutionCards = [];
+    makeAutoObservable(this);
   }
 
   getScore = () => {
@@ -46,7 +47,7 @@ class Player implements IPlayer {
   };
 
   getDiscountBallCollection = () => {
-    const bc = new BallCollection({
+    let bc = new BallCollection({
       masterball: 0,
       ultraball: 0,
       healball: 0,
@@ -56,9 +57,7 @@ class Player implements IPlayer {
     });
 
     this.capturedCards.forEach((card) => {
-      (Object.keys(bc.balls) as BallType[]).forEach((key) => {
-        bc.balls[key] += card.rewardBalls.balls[key];
-      });
+      bc = bc["+"](card.rewardBalls);
     });
 
     return bc;

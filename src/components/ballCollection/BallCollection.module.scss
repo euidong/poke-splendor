@@ -11,11 +11,13 @@
     align-items: flex-end;
     &__cnt {
       &__input {
+        margin-left: -2px;
+        background-color: transparent;
         display: flex;
         border: none;
         border-bottom: 1px solid black;
         outline: none;
-        width: 8px;
+        width: 11px;
         text-align: center;
       }
       input::-webkit-outer-spin-button,

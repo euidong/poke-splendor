@@ -6,6 +6,8 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
 
 - [x] Base Setup (Typescript, ReactJS, MobX)
 - [x] Base Logic (Poke Splender)
+  - [x] Create test codes
+  - [x] Implement Logic
 - [x] Base Moderator (Document Event Subscription)
 - [ ] Base UI
   - [x] Collect Image files (Poke Ball, Pokemon, Background, Character, etc.)
@@ -19,8 +21,8 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
   - [ ] Select Font, size, etc.
 - [ ] Local Game setup
   - [x] Implement Controller logic
+  - [x] Fix Capture detail logic
   - [ ] Implement Finalization of Game
-  - [ ] Fix Capture detail logic
 - [ ] WebRTC setup
   - [ ] Select STUN Server
   - [ ] Implement WebRTC Moderator
