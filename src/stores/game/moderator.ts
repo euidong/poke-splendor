@@ -110,8 +110,15 @@ class LocalModerator implements IModerator {
                 data: { request: e.detail },
               });
             }
-            this.game.nextTurn();
-            this.publish({ type: "UpdateResult", data: { game: this.game } });
+            if (this.game.isDone()) {
+              this.game.nextTurn();
+              this.publish({ type: "UpdateResult", data: { game: this.game } });
+            } else {
+              this.publish({
+                type: "ErrorRequest",
+                data: { request: e.detail },
+              });
+            }
           } else if (e.detail.type === "ErrorRequest") {
             // do nothing
           }

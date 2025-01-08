@@ -16,13 +16,20 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
     - [x] Back
   - [x] Implement Ball Token UI
   - [x] Implement Board UI
+  - [x] Implement Player Stat UI
   - [x] Implement Controller UI
-  - [ ] Implement Onboarding UI
+  - [x] Winner View UI
+  - [ ] Implement Summarized Version
+    - [ ] Card Front
+    - [ ] Player Stat
   - [ ] Select Font, size, etc.
-- [ ] Local Game setup
+  - [ ] Re-design Lobby UI
+  - [ ] Re-design Winner UI
+  - [ ] Go to Lobby button
+- [x] Local Game setup
   - [x] Implement Controller logic
   - [x] Fix Capture detail logic
-  - [ ] Implement Finalization of Game
+  - [x] Implement Finalization of Game
 - [ ] WebRTC setup
   - [ ] Select STUN Server
   - [ ] Implement WebRTC Moderator

@@ -10,6 +10,7 @@ import useStores from "../../hooks/useStores";
 import Frame from "../../components/Frame";
 import { IModerator, PublishInput } from "../../stores/game/moderator";
 import { observer } from "mobx-react";
+import WinnerModal from "../../components/WinnerModal";
 
 type PlayProps = {
   playerIdx: number;
@@ -19,6 +20,7 @@ const Play = ({ playerIdx }: PlayProps) => {
   const stores = useStores();
   const moderator: IModerator = stores.moderators.get(playerIdx);
   const game = moderator.game;
+  const maxScore = Math.max(...game.players.map((p) => p.getScore()));
 
   return game.turn === moderator.myPlayerIdx ? (
     <Frame debug={true}>
@@ -105,6 +107,16 @@ const Play = ({ playerIdx }: PlayProps) => {
           moderator.publish(fpi);
         }}
       />
+
+      {game.isDone() && (
+        <WinnerModal
+          winner={game.players
+            .filter((p) => p.getScore() === maxScore)
+            .map((p) => p.character)
+            .join(", ")}
+          onGotoLobbyClick={() => (stores.view.name = "main")}
+        />
+      )}
     </Frame>
   ) : (
     <></>

@@ -194,6 +194,8 @@ const emptyBallCollection = new BallCollection({
   masterball: 0,
 });
 
+const goalScore = 18;
+
 export {
   loadConsts,
   loadConstsAsync,
@@ -203,4 +205,5 @@ export {
   desiredPlayerNums,
   desiredInitialBoardBallCollectionsPerPlayerNums,
   emptyBallCollection,
+  goalScore,
 };

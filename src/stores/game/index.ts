@@ -5,13 +5,13 @@ import {
   desiredInitialBoardBallCollectionsPerPlayerNums,
   desiredOpenCardNumInBoard,
   emptyBallCollection,
+  goalScore,
 } from "../const";
 import { shuffle } from "../../utils";
 import { CardType, BoardCard, Card } from "./card";
 import { Player, IPlayer } from "./player";
 import { BallCollection, IBallCollection } from "./ballCollection";
 
-// TODO: erase every `console.error` line.
 class Game {
   numPlayers?: 2 | 3 | 4 = undefined;
   boardBallCollection?: BallCollection = undefined;
@@ -19,6 +19,7 @@ class Game {
   round?: number = undefined;
   turn?: number = undefined;
   players: IPlayer[] = [];
+  isFinishRound: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -31,11 +32,9 @@ class Game {
       this.numPlayers < 2 ||
       this.numPlayers > 4
     ) {
-      const err = Error(
+      return new Error(
         `Number of Players is wrong (numPlayers: {this.numPlayers}`
       );
-      console.error(err);
-      return err;
     }
     let err = this.initBoard(this.numPlayers);
     if (err) {
@@ -47,6 +46,7 @@ class Game {
     }
     this.round = 1;
     this.turn = 0;
+    this.isFinishRound = false;
     return null;
   }
 
@@ -81,13 +81,30 @@ class Game {
       this.round === undefined ||
       this.numPlayers === undefined
     ) {
-      console.error(
+      return new Error(
         "[Invalid Environment] You need to initialize game before starting"
       );
+    }
+
+    if (this.players[this.turn].getScore() >= goalScore) {
+      this.isFinishRound = true;
+    }
+
+    if (this.isDone()) {
+      return new Error("[Invalid Environment] Game is done.");
+    }
+
+    this.turn = (this.turn + 1) % this.numPlayers;
+
+    if (this.turn === 0) this.round++;
+    return null;
+  }
+
+  isDone() {
+    if (!this.numPlayers) {
       return false;
     }
-    this.turn = (this.turn + 1) % this.numPlayers;
-    if (this.turn === 0) this.round++;
+    return this.turn === this.numPlayers - 1 && this.isFinishRound;
   }
 
   modifyBallCollection(playerIdx: number, reqBallCollection: BallCollection) {
@@ -536,11 +553,9 @@ class Game {
 
   shuffleBoardCards() {
     if (this.boardCards === undefined) {
-      const err = new Error(
+      return new Error(
         "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
       );
-      console.error(err);
-      return err;
     }
     this.boardCards = shuffle(this.boardCards);
     return null;
@@ -548,11 +563,9 @@ class Game {
 
   openBoardCards() {
     if (this.boardCards === undefined) {
-      const err = new Error(
+      return new Error(
         "[Invalid Environment] BoardCard isn't exist, You need to initialize game."
       );
-      console.error(err);
-      return err;
     }
 
     const curOpenCardNumInBoard: { [key in CardType]: number } = {
