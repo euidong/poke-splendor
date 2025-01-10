@@ -1,38 +1,26 @@
 import "./App.css";
 import Controller from "./components/controller";
 import Frame from "./components/Frame";
-import useStores from "./hooks/useStores";
-import { IModerator } from "./stores/game/moderator";
 import BallList from "./views/ballList";
 import CardList from "./views/cardList";
 import CharacterList from "./views/characterList";
-import Main from "./views/main";
-import Play from "./views/play";
 import { observer } from "mobx-react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import PlayerStat from "./views/playerStat";
+import WebRtcTest from "./views/webRtcTest";
+import LocalPlay from "./views/localPlay";
+import Home from "./views/home";
+import OnlineLobby from "./views/onlineLobby";
+import OnlinePlay from "./views/onlinePlay";
 
 const App = () => {
-  const { view, moderators } = useStores();
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            view.name === "main" ? (
-              <Main />
-            ) : (
-              <>
-                {moderators
-                  .getAll()
-                  .map((moderator: IModerator, idx: number) => (
-                    <Play key={idx} playerIdx={idx} />
-                  ))}
-              </>
-            )
-          }
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/local" element={<LocalPlay />} />
+        <Route path="/lobby" element={<OnlineLobby />} />
+        <Route path="/online" element={<OnlinePlay />} />
         <Route path="/cards" element={<CardList />} />
         <Route path="/balls" element={<BallList />} />
         <Route path="/characters" element={<CharacterList />} />
@@ -46,6 +34,7 @@ const App = () => {
           }
         />
         <Route path="/player-stat" element={<PlayerStat />} />
+        <Route path="/webrtc-test" element={<WebRtcTest />} />
       </Routes>
     </BrowserRouter>
   );

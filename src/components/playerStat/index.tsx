@@ -1,7 +1,7 @@
 import styles from "./PlayerStat.module.scss";
 import { ICard } from "../../stores/game/card";
 import BallCollection, { BallCollectionProps } from "../ballCollection";
-import Character from "../../chracter";
+import Character from "../chracter";
 import { CharacterType } from "../../stores/game/character";
 import Card, { cardObjectToCardProps } from "../card";
 import useStores from "../../hooks/useStores";

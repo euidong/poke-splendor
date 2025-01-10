@@ -81,6 +81,22 @@ const pascalToSnake = (str: string) => {
   return str.replace(/([A-Z])/g, "_$1").toLowerCase();
 };
 
+function uuidToHexColor(uuid: string) {
+  // Simple hash function to create a number from the UUID
+  let hash = 0;
+  for (let i = 0; i < uuid.length; i++) {
+    hash = uuid.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  // Convert hash to a hex color code
+  let color = "#";
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += ("00" + value.toString(16)).slice(-2);
+  }
+  return color;
+}
+
 export {
   shuffle,
   pokeNoToName,
@@ -90,4 +106,5 @@ export {
   characterTypeToUrl,
   ballTypeToColor,
   pascalToSnake,
+  uuidToHexColor,
 };

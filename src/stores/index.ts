@@ -1,11 +1,11 @@
 import Controller from "./controller";
-import { LocalModerators } from "./game/moderator";
+import { LocalModerators, WebRTCModerators } from "./game/moderator";
 import Input from "./input";
-import View from "./view";
 
 const stores = {
-  view: new View(),
-  moderators: new LocalModerators(),
+  localModerators: new LocalModerators(),
+  onlineModerators: new WebRTCModerators(),
+
   input: new Input(),
   controller: new Controller(),
 };

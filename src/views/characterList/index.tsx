@@ -1,4 +1,4 @@
-import Character from "../../chracter";
+import Character from "../../components/chracter";
 import { CharacterTypes } from "../../stores/game/character";
 import styles from "./CharacterList.module.scss";
 

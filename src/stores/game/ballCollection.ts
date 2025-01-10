@@ -16,6 +16,11 @@ interface IBallCollection {
   "<=": (bc: IBallCollection) => boolean;
   "-=": (bc: IBallCollection) => IBallCollection;
   "+=": (bc: IBallCollection) => IBallCollection;
+
+  serialization: () => { balls: { [key in BallType]: number } };
+  deserialization: (obj: {
+    balls: { [key in BallType]: number };
+  }) => IBallCollection;
 }
 
 class BallCollection implements IBallCollection {
@@ -120,6 +125,18 @@ class BallCollection implements IBallCollection {
 
   "-=" = (bc: IBallCollection) => {
     return this["-"](bc);
+  };
+
+  serialization = () => {
+    return { balls: this.balls };
+  };
+
+  static deserialization = (obj: { balls: { [key in BallType]: number } }) => {
+    return new BallCollection(obj.balls);
+  };
+
+  deserialization = (obj: { balls: { [key in BallType]: number } }) => {
+    return BallCollection.deserialization(obj);
   };
 }
 

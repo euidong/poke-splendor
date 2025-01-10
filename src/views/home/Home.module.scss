@@ -1,9 +1,9 @@
-.main {
+.home {
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: flex-end;
-  &__form {
+  &__wrapper {
     display: flex;
     flex-direction: column;
     margin-bottom: 50px;
@@ -40,10 +40,34 @@
         }
       }
     }
-    &__submit {
+    &__join {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 80px;
+      &__description {
+        display: flex;
+        color : #808080;
+        margin-bottom: 5px;
+      }
+      &__address {
+        display: flex;
+        outline: none;
+        border: none; width: 260px;
+        text-align: center;
+        border-bottom: 1px solid black;
+        margin-bottom: 5px;
+      }
+      &__button {
+        margin-top: 5px;
+        width: 150px;
+      }
+    }
+    
+    &__button {
       margin-top: 5px;
       width: 150px;
-
     }
   }
 }

@@ -59,10 +59,11 @@ class Game {
     this.boardBallCollection =
       desiredInitialBoardBallCollectionsPerPlayerNums[numPlayers].deepCopy();
 
-    this.boardCards = Object.values(cards).map((card) => ({
-      ...card,
-      open: false,
-    }));
+    this.boardCards = Object.values(cards).map((card) => {
+      const bc = new BoardCard({ ...card });
+      bc.open = false;
+      return bc;
+    });
 
     let err = this.shuffleBoardCards();
     if (err) {
@@ -104,7 +105,7 @@ class Game {
     if (!this.numPlayers) {
       return false;
     }
-    return this.turn === this.numPlayers - 1 && this.isFinishRound;
+    return this.isFinishRound && this.turn === this.numPlayers - 1;
   }
 
   modifyBallCollection(playerIdx: number, reqBallCollection: BallCollection) {
@@ -595,6 +596,42 @@ class Game {
 
     return null;
   }
+
+  serialization = () => {
+    return {
+      numPlayers: this.numPlayers,
+      boardBallCollection: this.boardBallCollection?.serialization(),
+      boardCards: this.boardCards?.map((card) => card.serialization()),
+      round: this.round,
+      turn: this.turn,
+      players: this.players.map((player) => player.serialization()),
+      isFinishRound: this.isFinishRound,
+    };
+  };
+
+  static deserialization = (obj: {
+    numPlayers: 2 | 3 | 4;
+    boardBallCollection: any;
+    boardCards: any[];
+    round: number;
+    turn: number;
+    players: any[];
+    isFinishRound: boolean;
+  }) => {
+    const game = new Game();
+    game.numPlayers = obj.numPlayers;
+    game.boardBallCollection = BallCollection.deserialization(
+      obj.boardBallCollection
+    );
+    game.boardCards = obj.boardCards.map((obj) =>
+      BoardCard.deserialization(obj)
+    );
+    game.round = obj.round;
+    game.turn = obj.turn;
+    game.players = obj.players.map((player) => Player.deserializtion(player));
+    game.isFinishRound = obj.isFinishRound;
+    return game;
+  };
 }
 
 export default Game;

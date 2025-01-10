@@ -16,7 +16,7 @@ const BallCollection = (props: BallCollectionProps) => {
   return (
     <div className={styles["ball_collection"]}>
       {BallTypes.map((ballType) => (
-        <div className={styles["ball_collection__ball"]}>
+        <div key={ballType} className={styles["ball_collection__ball"]}>
           <div className={styles["ball_collection__ball__image"]}>
             <Ball ballType={ballType} />
           </div>

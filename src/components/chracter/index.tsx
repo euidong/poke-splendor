@@ -1,6 +1,6 @@
 import styles from "./Character.module.scss";
-import { CharacterType } from "../stores/game/character";
-import { characterTypeToUrl } from "../utils";
+import { CharacterType } from "../../stores/game/character";
+import { characterTypeToUrl } from "../../utils";
 
 type CharacterProps = {
   type: CharacterType;

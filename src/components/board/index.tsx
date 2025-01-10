@@ -16,11 +16,12 @@ const Board = ({ boardCards }: BoardProps) => {
     <div className={styles["board"]}>
       {["Tier3", "Tier2", "Tier1"].map((cardType) => {
         return (
-          <div className={styles["board__card_list"]}>
+          <div key={cardType} className={styles["board__card_list"]}>
             {boardCards.map((card: BoardCard) => {
               if (card.type === cardType && card.open) {
                 return (
                   <Card
+                    key={card.id}
                     {...cardObjectToCardProps(card, "Front")}
                     isSelected={
                       stores.controller.selectedTgtPokeCardId === card.id
@@ -51,6 +52,7 @@ const Board = ({ boardCards }: BoardProps) => {
           ) {
             return (
               <Card
+                key={card.id}
                 {...cardObjectToCardProps(card, "Front")}
                 isSelected={stores.controller.selectedTgtPokeCardId === card.id}
                 onClick={

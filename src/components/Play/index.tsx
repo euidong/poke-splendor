@@ -2,27 +2,35 @@ import styles from "./Play.module.scss";
 
 import BallCollection, {
   ballCollectionObjectToBallCollectionProps,
-} from "../../components/ballCollection";
-import Board from "../../components/board";
-import PlayerStat from "../../components/playerStat";
-import Controller from "../../components/controller";
+} from "../ballCollection";
+import Board from "../board";
+import PlayerStat from "../playerStat";
+import Controller from "../controller";
 import useStores from "../../hooks/useStores";
-import Frame from "../../components/Frame";
+import Frame from "../Frame";
 import { IModerator, PublishInput } from "../../stores/game/moderator";
 import { observer } from "mobx-react";
-import WinnerModal from "../../components/WinnerModal";
+import WinnerModal from "../WinnerModal";
+import { useNavigate } from "react-router";
 
 type PlayProps = {
   playerIdx: number;
+  moderator: IModerator;
+  hide?: boolean;
 };
 
-const Play = ({ playerIdx }: PlayProps) => {
+const Play = ({ playerIdx, moderator, hide }: PlayProps) => {
   const stores = useStores();
-  const moderator: IModerator = stores.moderators.get(playerIdx);
+  const navigate = useNavigate();
   const game = moderator.game;
+
+  if (!!!game) return <></>; // TODO: fix it
+  if (hide && game.turn !== playerIdx) {
+    return <></>;
+  }
   const maxScore = Math.max(...game.players.map((p) => p.getScore()));
 
-  return game.turn === moderator.myPlayerIdx ? (
+  return (
     <Frame debug={true}>
       <div className={styles["play"]}>
         {game.boardBallCollection && (
@@ -35,6 +43,7 @@ const Play = ({ playerIdx }: PlayProps) => {
         {game.boardCards && <Board boardCards={game.boardCards} />}
         {game.players.map((player, idx) => (
           <PlayerStat
+            key={player.character}
             isMe={playerIdx === idx}
             characterName={player.character}
             capturedCards={player.capturedCards}
@@ -72,7 +81,6 @@ const Play = ({ playerIdx }: PlayProps) => {
                 tgtCardId: stores.input.targetEvolvePokeCardId,
               },
             };
-            debugger;
             moderator.publish(epi);
           }
         }}
@@ -114,12 +122,10 @@ const Play = ({ playerIdx }: PlayProps) => {
             .filter((p) => p.getScore() === maxScore)
             .map((p) => p.character)
             .join(", ")}
-          onGotoLobbyClick={() => (stores.view.name = "main")}
+          onGotoLobbyClick={() => navigate("/")}
         />
       )}
     </Frame>
-  ) : (
-    <></>
   );
 };
 

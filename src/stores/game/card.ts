@@ -1,5 +1,5 @@
 import { IPokemon } from "./pokemon";
-import { IBallCollection } from "./ballCollection";
+import { BallCollection, IBallCollection } from "./ballCollection";
 
 const CardTypes = ["Tier1", "Tier2", "Tier3", "Rare", "Legendary"] as const;
 type CardType = (typeof CardTypes)[number];
@@ -14,7 +14,8 @@ interface ICard {
   neededBallsForEvolution: IBallCollection;
   rewardBalls: IBallCollection;
 
-  isSame: (card: ICard) => boolean;
+  serialization: () => any;
+  deserialization: (obj: any) => ICard;
 }
 
 class Card implements ICard {
@@ -45,14 +46,81 @@ class Card implements ICard {
     this.rewardBalls = card.rewardBalls;
   }
 
-  isSame = (card: ICard) => {
-    if (this.pokemon.no !== card.pokemon.no) return false;
-    if (this.score !== card.score) return false;
-    return true;
+  serialization = () => ({
+    id: this.id,
+    score: this.score,
+    type: this.type,
+    pokemon: this.pokemon,
+    neededBallsForCapturing: this.neededBallsForCapturing.serialization(),
+    neededBallsForEvolution: this.neededBallsForEvolution.serialization(),
+    rewardBalls: this.rewardBalls.serialization(),
+  });
+
+  deserialization = (obj: any) => {
+    return Card.deserialization(obj);
+  };
+
+  static deserialization = (obj: {
+    id: number;
+    score: number;
+    type: CardType;
+    pokemon: IPokemon;
+    neededBallsForCapturing: any;
+    neededBallsForEvolution: any;
+    rewardBalls: any;
+  }) => {
+    return new Card({
+      id: obj.id,
+      score: obj.score,
+      type: obj.type,
+      pokemon: obj.pokemon,
+      neededBallsForCapturing: BallCollection.deserialization(
+        obj.neededBallsForCapturing
+      ),
+      neededBallsForEvolution: BallCollection.deserialization(
+        obj.neededBallsForEvolution
+      ),
+      rewardBalls: BallCollection.deserialization(obj.rewardBalls),
+    });
   };
 }
 
-type BoardCard = ICard & { open: boolean };
+class BoardCard extends Card {
+  open: boolean = false;
 
-export type { ICard, CardType, BoardCard };
-export { Card, CardTypes };
+  serialization = () => ({
+    id: this.id,
+    open: this.open,
+    score: this.score,
+    type: this.type,
+    pokemon: this.pokemon,
+    neededBallsForCapturing: this.neededBallsForCapturing.serialization(),
+    neededBallsForEvolution: this.neededBallsForEvolution.serialization(),
+    rewardBalls: this.rewardBalls.serialization(),
+  });
+
+  deserialization = (obj: any) => {
+    return BoardCard.deserialization(obj);
+  };
+
+  static deserialization = (obj: any) => {
+    const bc = new BoardCard({
+      id: obj.id,
+      score: obj.score,
+      type: obj.type,
+      pokemon: obj.pokemon,
+      neededBallsForCapturing: BallCollection.deserialization(
+        obj.neededBallsForCapturing
+      ),
+      neededBallsForEvolution: BallCollection.deserialization(
+        obj.neededBallsForEvolution
+      ),
+      rewardBalls: BallCollection.deserialization(obj.rewardBalls),
+    });
+    bc.open = obj.open;
+    return bc;
+  };
+}
+
+export type { ICard, CardType };
+export { Card, CardTypes, BoardCard };
