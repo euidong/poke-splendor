@@ -1,8 +1,27 @@
 .play {
   display: flex;
   flex-direction: column;
-  overflow: scroll;
-  > div {
-    margin-bottom: 3px;
+  height: 560px;flex: 1;
+  &__header {
+    position: relative;
+    top: 0;
+    padding: 3px;
+    
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid black;
+    &__info {
+      display: flex;
+      flex: 1;
+    }
+  }
+  &__body {
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    > div {
+      margin-top: 3px;
+    }
   }
 }

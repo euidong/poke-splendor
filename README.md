@@ -34,14 +34,15 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
   - [x] Select STUN Server - peerJS use google free stun server
   - [x] Implement WebRTC Moderator
   - [x] Implement Matching System  (OnlineLobby, OnlinePlay)
+  - [ ] Implement Disconnection / Reconnection
+    - [ ] Implement uuid per device (IP? deviceID? login system? - db? localStorage? sessionStorage?)
   - [ ] Implement Observing system
     - [ ] Inner Player Observing
     - [ ] Outer Player Observing
-  - [ ] Implement Disconnection / Reconnection
-    - [ ] Implement uuid per device (IP? deviceID? login system? - db??)
+  - [ ] Implement Lobby Loading UI
   - [ ] Deploy Own Signaling server (now can be conflic with other system)
 - [ ] New features
-  - [ ] Implement Timer for automatical turn changing
+  - [x] Implement Timer for automatical turn changing
   - [ ] Implement Animation for card selection, turn change, etc.
 
 ## Signaling Server

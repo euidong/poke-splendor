@@ -12,6 +12,8 @@ import { IModerator, PublishInput } from "../../stores/game/moderator";
 import { observer } from "mobx-react";
 import WinnerModal from "../WinnerModal";
 import { useNavigate } from "react-router";
+import { CharacterTypes } from "../../stores/game/character";
+import Timer from "../Timer";
 
 type PlayProps = {
   playerIdx: number;
@@ -33,28 +35,42 @@ const Play = ({ playerIdx, moderator, hide }: PlayProps) => {
   return (
     <Frame debug={true}>
       <div className={styles["play"]}>
-        {game.boardBallCollection && (
-          <BallCollection
-            {...ballCollectionObjectToBallCollectionProps(
-              game.boardBallCollection
-            )}
+        <header className={styles["play__header"]}>
+          <span className={styles["play__header__info"]}>
+            Round#{game.round} - {CharacterTypes[game.turn!]}'s turn
+          </span>
+          <Timer
+            initialSeconds={90}
+            onTimeout={() => {
+              stores.input.clear();
+              moderator.publish({ type: "FinishTurn", data: {} });
+            }}
           />
-        )}
-        {game.boardCards && <Board boardCards={game.boardCards} />}
-        {game.players.map((player, idx) => (
-          <PlayerStat
-            key={player.character}
-            isMe={playerIdx === idx}
-            characterName={player.character}
-            capturedCards={player.capturedCards}
-            reservedCards={player.resevedCards}
-            evolutionCnt={player.getEvolutionCnt()}
-            score={player.getScore()}
-            {...ballCollectionObjectToBallCollectionProps(
-              player.ballCollection
-            )}
-          />
-        ))}
+        </header>
+        <div className={styles["play__body"]}>
+          {game.boardBallCollection && (
+            <BallCollection
+              {...ballCollectionObjectToBallCollectionProps(
+                game.boardBallCollection
+              )}
+            />
+          )}
+          {game.boardCards && <Board boardCards={game.boardCards} />}
+          {game.players.map((player, idx) => (
+            <PlayerStat
+              key={player.character}
+              isMe={playerIdx === idx}
+              characterName={player.character}
+              capturedCards={player.capturedCards}
+              reservedCards={player.resevedCards}
+              evolutionCnt={player.getEvolutionCnt()}
+              score={player.getScore()}
+              {...ballCollectionObjectToBallCollectionProps(
+                player.ballCollection
+              )}
+            />
+          ))}
+        </div>
       </div>
       <Controller
         onCapture={() => {
