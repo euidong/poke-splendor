@@ -9,7 +9,7 @@ import {
 import { CardProps } from "./type";
 import Ball from "./Ball";
 
-const CardFront = ({
+const CardFrontSummary = ({
   pokemon_no,
   required_master_ball_cnt,
   required_ultra_ball_cnt,
@@ -24,8 +24,8 @@ const CardFront = ({
   evolution_ball_cnt,
   isSelected,
   onClick,
+  view,
 }: Omit<CardProps, "side">) => {
-  const nextEvolutionPokemonNo = pokeNoToNextEvolutionPokemonNo(pokemon_no);
   const pokemonName = pokeNoToName(pokemon_no);
   const requiredBalls = getRequiredBalls(
     required_master_ball_cnt,
@@ -38,54 +38,30 @@ const CardFront = ({
 
   return (
     <div
-      className={`${styles["card--front"]} ${styles["full"]}`}
+      className={styles["card--front"]}
       style={{
         backgroundColor: ballTypeToColor(reward_ball_type, false),
         cursor: onClick ? "pointer" : "default",
         outline: isSelected ? "2px solid red" : "none",
+        height: view !== "Full" ? "64px" : "150px",
       }}
       onClick={(e) => {
         e.stopPropagation();
         if (onClick) onClick();
       }}
     >
-      <header
-        className={styles["card--front__header"]}
-        style={{ backgroundColor: ballTypeToColor(reward_ball_type, true) }}
-      >
-        <div className={styles["card--front__header__score"]}>{score}</div>
-        {nextEvolutionPokemonNo && (
-          <div className={styles["card--front__header__evolution"]}>
-            <div className={styles["card--front__header__evolution__result"]}>
-              <img
-                src={pokeNoToUrl(nextEvolutionPokemonNo)}
-                alt={`Next Evolution pokemon is ${pokemonName}`}
-              />
-            </div>
-            <Ball cnt={evolution_ball_cnt} type={evolution_ball_type} />
-          </div>
-        )}
-        <div className={styles["card--front__header__reward"]}>
-          <Ball cnt={reward_ball_cnt} type={reward_ball_type} />
-        </div>
-      </header>
       <section className={styles["card--front__body"]}>
         <img
           src={pokeNoToUrl(pokemon_no)}
           alt={`current pokemon is ${pokemonName}`}
         />
-      </section>
-      <footer className={styles["card--front__footer"]}>
-        <div className={styles["card--front__footer__capture"]}>
-          <div className={styles["card--front__footer__capture__ball_wrapper"]}>
-            {requiredBalls.map(
-              (b, idx) =>
-                b.cnt > 0 && <Ball key={idx} cnt={b.cnt} type={b.type} />
-            )}
-          </div>
+        <div className={styles["card--front__body__ball_wrapper"]}>
+          {requiredBalls.map(
+            (b, idx) =>
+              b.cnt > 0 && <Ball key={idx} cnt={b.cnt} type={b.type} />
+          )}
         </div>
-        <div className={styles["card--front__footer__name"]}>{pokemonName}</div>
-      </footer>
+      </section>
     </div>
   );
 };
@@ -108,4 +84,4 @@ const getRequiredBalls = (
   ];
 };
 
-export default CardFront;
+export default CardFrontSummary;

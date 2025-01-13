@@ -14,6 +14,37 @@ const Board = ({ boardCards }: BoardProps) => {
 
   return (
     <div className={styles["board"]}>
+      <div className={styles["board__card_list"]}>
+        {boardCards.map((card: BoardCard) => {
+          if (
+            (card.type === "Legendary" || card.type === "Rare") &&
+            card.open
+          ) {
+            return (
+              <Card
+                key={card.id}
+                {...cardObjectToCardProps(card, "Front")}
+                isSelected={stores.controller.selectedTgtPokeCardId === card.id}
+                view={
+                  stores.controller.selectedTgtPokeCardId === card.id
+                    ? "Full"
+                    : "Summary"
+                }
+                onClick={
+                  isSelectionMode
+                    ? () =>
+                        (stores.controller.selectedTgtPokeCardId =
+                          stores.controller.selectedTgtPokeCardId === card.id
+                            ? null
+                            : card.id)
+                    : undefined
+                }
+              />
+            );
+          }
+          return null;
+        })}
+      </div>
       {["Tier3", "Tier2", "Tier1"].map((cardType) => {
         return (
           <div key={cardType} className={styles["board__card_list"]}>
@@ -25,6 +56,11 @@ const Board = ({ boardCards }: BoardProps) => {
                     {...cardObjectToCardProps(card, "Front")}
                     isSelected={
                       stores.controller.selectedTgtPokeCardId === card.id
+                    }
+                    view={
+                      stores.controller.selectedTgtPokeCardId === card.id
+                        ? "Full"
+                        : "Summary"
                     }
                     onClick={
                       isSelectionMode
@@ -44,32 +80,6 @@ const Board = ({ boardCards }: BoardProps) => {
           </div>
         );
       })}
-      <div className={styles["board__card_list"]}>
-        {boardCards.map((card: BoardCard) => {
-          if (
-            (card.type === "Legendary" || card.type === "Rare") &&
-            card.open
-          ) {
-            return (
-              <Card
-                key={card.id}
-                {...cardObjectToCardProps(card, "Front")}
-                isSelected={stores.controller.selectedTgtPokeCardId === card.id}
-                onClick={
-                  isSelectionMode
-                    ? () =>
-                        (stores.controller.selectedTgtPokeCardId =
-                          stores.controller.selectedTgtPokeCardId === card.id
-                            ? null
-                            : card.id)
-                    : undefined
-                }
-              />
-            );
-          }
-          return null;
-        })}
-      </div>
     </div>
   );
 };

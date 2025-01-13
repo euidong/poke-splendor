@@ -19,4 +19,5 @@ export type CardProps = {
   side: "Front" | "Back";
   onClick?: () => void;
   isSelected?: boolean;
+  view?: "Full" | "Summary";
 };

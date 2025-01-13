@@ -1,5 +1,21 @@
 # Pokémon Splendor
 
+<div align="center">
+  
+  ![nodeJS](https://img.shields.io/badge/nodeJS-20.17.0-brightgreen)
+  ![typescript](https://img.shields.io/badge/typescript-4.4.2-blueviolet)
+  ![react](https://img.shields.io/badge/react-18.3.1-orange)
+  ![peerjs](https://img.shields.io/badge/peerjs-1.5.4-blue)
+  
+</div>
+
+<div align="center">
+
+  ![thumbnail](/images/simple-ui.png)
+
+</div>
+
+
 ## TODO
 
 Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy as a chrome extension.
@@ -9,7 +25,7 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
   - [x] Create test codes
   - [x] Implement Logic
 - [x] Base Moderator (Document Event Subscription)
-- [ ] Base UI
+- [x] Base UI
   - [x] Collect Image files (Poke Ball, Pokemon, Background, Character, etc.)
   - [x] Implement Card UI (Back, and Front)
     - [x] Front
@@ -19,9 +35,9 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
   - [x] Implement Player Stat UI
   - [x] Implement Controller UI
   - [x] Winner View UI
-  - [ ] Implement Summarized Version
-    - [ ] Card Front
-    - [ ] Player Stat
+  - [x] Implement Summarized Version
+    - [x] Card Front
+    - [x] Player Stat
   - [ ] Select Font, size, etc.
   - [ ] Re-design Lobby UI
   - [ ] Re-design Winner UI
@@ -44,14 +60,3 @@ Target Device is mobile (base size: iPhone SE2), and I also have plan to deploy 
 - [ ] New features
   - [x] Implement Timer for automatical turn changing
   - [ ] Implement Animation for card selection, turn change, etc.
-
-## Signaling Server
-
-Image: debian-12-bookworm-v20241210
-
-```bash
-sudo apt update
-sudo apt install git nodejs npm
-sudo npm install -g yarn
-yarn install
-```

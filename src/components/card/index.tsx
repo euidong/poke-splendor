@@ -1,11 +1,42 @@
+import { useState } from "react";
 import { BallType } from "../../stores/game/ball";
 import { ICard } from "../../stores/game/card";
 import CardBack from "./back";
 import CardFront from "./front";
+import CardFrontSummary from "./frontSummary";
 import { CardProps } from "./type";
 
-const Card = ({ side, ...props }: CardProps) => {
-  if (side === "Front") return <CardFront {...props} />;
+const Card = ({ side, view, ...props }: CardProps) => {
+  const [temporalView, setTemporalView] = useState<
+    "Full" | "Summary" | undefined
+  >(view);
+
+  if (side === "Front" && temporalView === "Full")
+    return (
+      <CardFront
+        {...props}
+        onClick={() => {
+          if (props.onClick) {
+            props.onClick && props.onClick();
+          } else {
+            setTemporalView("Summary");
+          }
+        }}
+      />
+    );
+  else if (side === "Front")
+    return (
+      <CardFrontSummary
+        {...props}
+        onClick={() => {
+          if (props.onClick) {
+            props.onClick();
+          } else {
+            setTemporalView("Full");
+          }
+        }}
+      />
+    );
   else return <CardBack {...props} />;
 };
 

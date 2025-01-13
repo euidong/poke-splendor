@@ -30,6 +30,20 @@ const PlayerStat = ({
   const isTgtSelectionMode = stores.controller.isPlayerStatTgtInSelectionMode;
   const isSrcSelectionMode = stores.controller.isPlayerStatSrcInSelectionMode;
 
+  const capturedCardGroup: ICard[][] = [];
+  capturedCards.forEach((card, idx) => {
+    if (idx % 4 === 0) {
+      capturedCardGroup.push([]);
+    }
+    capturedCardGroup[Math.floor(idx / 4)].push(card);
+  });
+  const reservedCardGroup: ICard[][] = [];
+  reservedCards.forEach((card, idx) => {
+    if (idx % 4 === 0) {
+      reservedCardGroup.push([]);
+    }
+    reservedCardGroup[Math.floor(idx / 4)].push(card);
+  });
   return (
     <div className={styles["player_stat"]}>
       <div className={styles["player_stat__profile"]}>
@@ -50,9 +64,9 @@ const PlayerStat = ({
         <BallCollection {...balls} />
       </div>
       <div className={styles["player_stat__list_title"]}>Captured Cards</div>
-      {capturedCards.length > 0 ? (
+      {capturedCardGroup.map((group) => (
         <div className={styles["player_stat__card_list"]}>
-          {capturedCards.map((card) => (
+          {group.map((card) => (
             <Card
               {...cardObjectToCardProps(card, "Front")}
               isSelected={stores.controller.selectedSrcPokeCardId === card.id}
@@ -68,13 +82,15 @@ const PlayerStat = ({
             />
           ))}
         </div>
-      ) : (
+      ))}
+      {capturedCards.length === 0 && (
         <div className={styles["player_stat__card_empty"]}>Empty</div>
       )}
+
       <div className={styles["player_stat__list_title"]}>Reserved Cards</div>
-      {reservedCards.length > 0 ? (
+      {reservedCardGroup.map((group) => (
         <div className={styles["player_stat__card_list"]}>
-          {reservedCards.map((card) => (
+          {group.map((card) => (
             <Card
               {...cardObjectToCardProps(card, "Front")}
               isSelected={stores.controller.selectedTgtPokeCardId === card.id}
@@ -90,7 +106,8 @@ const PlayerStat = ({
             />
           ))}
         </div>
-      ) : (
+      ))}
+      {reservedCards.length === 0 && (
         <div className={styles["player_stat__card_empty"]}>Empty</div>
       )}
     </div>

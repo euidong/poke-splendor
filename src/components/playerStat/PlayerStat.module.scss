@@ -1,5 +1,20 @@
 .player_stat {
+  &--summary {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 83px;
+    height: 72px;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    
+    background-color: white;
+  }
   display: flex;
+  background-color: white;
+  
   flex-direction: column;
   border: 1px solid black;
   border-radius: 10px;
@@ -10,13 +25,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid black;
+    justify-content: flex-start;
     padding: 5px;
     &__character_wrapper {
       display: flex;
-      flex:1;
-      border-right: 1px solid black;
+      flex: 1;
     }
     &__evolution {
       display: flex;
@@ -37,6 +50,7 @@
     }
   }
   &__ball_list {
+    border-top: 1px solid black;
     
     padding: 5px;
     display: flex;
@@ -47,14 +61,14 @@
     padding-top: 3px;
     border-top: 1px solid black;
   }
+  
   &__card_list {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 5px;
-    
-    & > div {
-      margin: 1px;
-    }
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    position: relative;
+    padding: 2.5px 5px;
+    height: 68px;
   }
   &__card_empty {
     display: flex;

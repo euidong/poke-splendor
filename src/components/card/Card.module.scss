@@ -16,6 +16,7 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
+      border-bottom: 1px solid black;
       height: 42px;
       border-radius: 9.3px 9.3px 0 0;
       &__score {
@@ -46,16 +47,21 @@
       }
     }
     &__body {
+      position: relative;
       display: flex;
       justify-content: center;
       flex: 1;
       height: 64px;
       align-items: center;
-      border-top: 1px solid black;
-      border-bottom: 1px solid black;
       & > img {
         padding: 5px;
         width: 50px;
+      }
+      &__ball_wrapper {
+        position: absolute;
+        bottom: 3px;
+        display: flex;
+        flex-direction: row;
       }
     }
     &__footer {
@@ -63,6 +69,7 @@
       flex-direction: row;
       align-items: center;
       flex: 1;
+      border-top: 1px solid black;
       &__capture {
         display: flex;
         flex-direction: column;
@@ -124,4 +131,11 @@
       }
     }
   }
+} 
+
+
+.full {
+  position: relative;
+  z-index: 2;
+  top: -37.5px;
 }
