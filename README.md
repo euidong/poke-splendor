@@ -11,7 +11,7 @@
 
 <div align="center">
 
-  ![thumbnail](/images/simple-ui.png)
+  <img src="/images/simple-ui.png" alt="thumbnail" height="600px" />
 
 </div>
 
