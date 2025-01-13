@@ -17,13 +17,31 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/local" element={<LocalPlay />} />
-        <Route path="/lobby" element={<OnlineLobby />} />
-        <Route path="/online" element={<OnlinePlay />} />
-        <Route path="/cards" element={<CardList />} />
-        <Route path="/balls" element={<BallList />} />
-        <Route path="/characters" element={<CharacterList />} />
+        <Route path={`${process.env.PUBLIC_URL}/`} element={<Home />} />
+        <Route
+          path={`${process.env.PUBLIC_URL}/local`}
+          element={<LocalPlay />}
+        />
+        <Route
+          path={`${process.env.PUBLIC_URL}/lobby`}
+          element={<OnlineLobby />}
+        />
+        <Route
+          path={`${process.env.PUBLIC_URL}/online`}
+          element={<OnlinePlay />}
+        />
+        <Route
+          path={`${process.env.PUBLIC_URL}/cards`}
+          element={<CardList />}
+        />
+        <Route
+          path={`${process.env.PUBLIC_URL}/balls`}
+          element={<BallList />}
+        />
+        <Route
+          path={`${process.env.PUBLIC_URL}/characters`}
+          element={<CharacterList />}
+        />
         <Route
           path="/controller"
           element={

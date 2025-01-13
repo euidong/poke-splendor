@@ -10,7 +10,7 @@ const LocalPlay = () => {
 
   const numPlayers = Number(searchParams.get("players"));
   if (numPlayers !== 2 && numPlayers !== 3 && numPlayers !== 4) {
-    navigate("/");
+    navigate("/poke-splendor");
     return <></>;
   }
   const { lms } = startLocalGame(numPlayers);

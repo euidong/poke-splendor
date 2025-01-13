@@ -11,7 +11,7 @@ const OnlinePlay = () => {
 
   if (!stores.onlineModerators.isExist()) {
     const centralPeerId = searchParams.get("room");
-    navigate(`/lobby?room=${centralPeerId}`);
+    navigate(`${process.env.PUBLIC_URL}/lobby?room=${centralPeerId}`);
     return <></>;
   }
   const moderator = stores.onlineModerators.get(0);

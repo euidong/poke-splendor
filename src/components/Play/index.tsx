@@ -169,7 +169,7 @@ const Play = ({ playerIdx, moderator, hide }: PlayProps) => {
             .filter((p) => p.getScore() === maxScore)
             .map((p) => p.character)
             .join(", ")}
-          onGotoLobbyClick={() => navigate("/")}
+          onGotoLobbyClick={() => navigate("/poke-splendor")}
         />
       )}
     </Frame>

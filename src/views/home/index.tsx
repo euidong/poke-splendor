@@ -8,7 +8,7 @@ const initialNumPlayers = 4;
 
 const Home = () => {
   const placeholder = crypto.randomUUID();
-  const naviate = useNavigate();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<"Local" | "Online" | undefined>();
   const [numPlayers, setNumPlayers] = useState<number>(initialNumPlayers);
 
@@ -37,7 +37,7 @@ const Home = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              naviate(`/local?players=${numPlayers}`);
+              navigate(`${process.env.PUBLIC_URL}/local?players=${numPlayers}`);
             }}
             className={styles["home__wrapper"]}
           >
@@ -83,9 +83,11 @@ const Home = () => {
                 const formData = new FormData(e.currentTarget);
                 const address = formData.get("address");
                 if (!!!address) {
-                  naviate(`/lobby?room=${placeholder}`);
+                  navigate(
+                    `${process.env.PUBLIC_URL}/lobby?room=${placeholder}`
+                  );
                 } else {
-                  naviate(`/lobby?room=${address}`);
+                  navigate(`${process.env.PUBLIC_URL}/lobby?room=${address}`);
                 }
               }}
             >
@@ -109,7 +111,7 @@ const Home = () => {
               type="button"
               onClick={() => {
                 const address = crypto.randomUUID();
-                naviate(`/lobby?room=${address}`);
+                navigate(`${process.env.PUBLIC_URL}/lobby?room=${address}`);
               }}
             >
               Create Room

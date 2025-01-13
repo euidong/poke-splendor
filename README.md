@@ -15,6 +15,9 @@
 
 </div>
 
+## Try
+
+on https://euidong.github.io/poke-splendor
 
 ## TODO
 

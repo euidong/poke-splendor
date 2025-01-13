@@ -1,11 +1,6 @@
 import styles from "./Card.module.scss";
 import { BallType } from "../../stores/game/ball";
-import {
-  ballTypeToColor,
-  pokeNoToName,
-  pokeNoToNextEvolutionPokemonNo,
-  pokeNoToUrl,
-} from "../../utils";
+import { ballTypeToColor, pokeNoToName, pokeNoToUrl } from "../../utils";
 import { CardProps } from "./type";
 import Ball from "./Ball";
 

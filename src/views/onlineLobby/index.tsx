@@ -37,13 +37,14 @@ const OnlineLobby = () => {
         stores.onlineModerators.set(moderators.moderators);
       }
     })();
-  });
+    // eslint-disable-next-line
+  }, []);
 
   const moderators = stores.onlineModerators as WebRTCModerators;
   const moderator = moderators.isExist() ? moderators.get(0) : undefined;
   if (moderator?.game) {
     const peerId = searchParams.get("room");
-    navigate(`/online?room=${peerId}`);
+    navigate(`${process.env.PUBLIC_URL}/online?room=${peerId}`);
   }
 
   return (
@@ -54,9 +55,9 @@ const OnlineLobby = () => {
           <button
             onClick={() =>
               navigator.clipboard.writeText(
-                `${window.location.origin}/lobby?room=${searchParams.get(
-                  "room"
-                )}`
+                `${window.location.origin}${
+                  process.env.PUBLIC_URL
+                }/lobby?room=${searchParams.get("room")}`
               )
             }
           >
